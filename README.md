@@ -8,9 +8,11 @@
 
 ## 在线演示
 
-GitHub Pages 地址将在仓库发布后补充：
+https://leena-free.github.io/liangzhu-extension-prototype/
 
-`https://<username>.github.io/liangzhu-extension-prototype/`
+仓库地址：
+
+https://github.com/leena-free/liangzhu-extension-prototype
 
 也可以直接下载 `index.html`，双击在浏览器中运行。
 
