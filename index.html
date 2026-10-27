@@ -1,0 +1,4196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="基于可拓学物元与可拓变换的良渚文化文创创新构思实验平台，毕业设计研究原型。">
+<title>良渚文化文创创新构思实验平台 · 可拓变换研究原型</title>
+<style>
+:root{
+  --paper:#f4efe2;
+  --paper-2:#efe8d8;
+  --surface:#fbf8f0;
+  --surface-strong:#fffdf8;
+  --ink:#2e2a25;
+  --ink-soft:#655f55;
+  --ink-faint:#8a8175;
+  --line:#d9cfbd;
+  --line-strong:#c7b9a3;
+  --jade:#3e7468;
+  --jade-deep:#28564e;
+  --jade-pale:#e4eee9;
+  --clay:#98624c;
+  --clay-pale:#f2e7df;
+  --cinnabar:#b24b3d;
+  --cinnabar-pale:#f4e3de;
+  --gold:#a78345;
+  --danger:#a64035;
+  --warning:#9b6a2f;
+  --success:#3f6d58;
+  --shadow:0 12px 32px rgba(76, 61, 41, .08);
+  --shadow-soft:0 5px 16px rgba(76, 61, 41, .06);
+  --radius:14px;
+  --radius-sm:9px;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC",Georgia,serif;
+  --sans:"Microsoft YaHei","PingFang SC","Noto Sans SC","Source Han Sans SC",Arial,sans-serif;
+  --mono:"Cascadia Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:14px;
+  line-height:1.58;
+  background:
+    radial-gradient(circle at 8% 2%, rgba(62,116,104,.06), transparent 29%),
+    radial-gradient(circle at 92% 8%, rgba(178,75,61,.04), transparent 26%),
+    linear-gradient(180deg, #f7f2e7 0%, var(--paper) 46%, #f1ebdd 100%);
+  min-height:100vh;
+}
+body.modal-open{overflow:hidden}
+::selection{background:rgba(62,116,104,.2)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.48}
+a{color:var(--jade-deep)}
+h1,h2,h3,h4,p{margin-top:0}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;letter-spacing:.015em}
+svg{display:block}
+.skip-link{
+  position:fixed;left:12px;top:-60px;z-index:1200;background:var(--jade-deep);color:#fff;
+  padding:8px 14px;border-radius:8px;transition:top .2s;
+}
+.skip-link:focus{top:12px}
+.app-shell{max-width:1720px;margin:0 auto;padding:18px 22px 26px}
+.topbar{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:22px;
+  padding:17px 20px 16px;border:1px solid var(--line);border-radius:18px;
+  background:linear-gradient(120deg,rgba(255,253,248,.96),rgba(248,243,232,.92));
+  box-shadow:var(--shadow-soft);position:relative;overflow:hidden;
+}
+.topbar::after{
+  content:"";position:absolute;right:-50px;top:-78px;width:280px;height:280px;border-radius:50%;
+  border:1px solid rgba(62,116,104,.11);box-shadow:0 0 0 28px rgba(62,116,104,.025),0 0 0 58px rgba(62,116,104,.018);
+  pointer-events:none;
+}
+.brand{display:flex;gap:17px;align-items:flex-start;min-width:0}
+.brand-seal{
+  width:54px;height:54px;border:1px solid rgba(178,75,61,.44);border-radius:11px;
+  display:grid;place-items:center;flex:0 0 auto;color:var(--cinnabar);
+  background:linear-gradient(145deg,rgba(255,252,246,.95),rgba(244,227,222,.72));
+  font-family:var(--serif);font-size:28px;font-weight:700;line-height:1;
+  box-shadow:inset 0 0 0 4px rgba(178,75,61,.045);
+}
+.brand-copy{min-width:0}
+.eyebrow{
+  display:flex;align-items:center;gap:8px;color:var(--jade-deep);font-size:11px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--jade)}
+.topbar h1{
+  margin:0;font-size:clamp(21px,2vw,31px);line-height:1.24;letter-spacing:.035em;color:#29251f;
+}
+.brand-sub{
+  margin:7px 0 0;color:var(--ink-soft);font-size:12.5px;max-width:880px;
+}
+.header-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px;position:relative;z-index:1;flex:0 0 auto}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.save-note{font-size:11px;color:var(--ink-faint);display:flex;align-items:center;gap:6px}
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--jade);box-shadow:0 0 0 3px rgba(62,116,104,.1)}
+.workflow{
+  display:flex;align-items:center;gap:0;margin-top:12px;flex-wrap:wrap;row-gap:8px;
+}
+.workflow-step{
+  display:flex;align-items:center;gap:8px;color:var(--ink-faint);font-size:11.5px;white-space:nowrap;
+}
+.workflow-step .num{
+  width:21px;height:21px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-strong);
+  font-family:var(--mono);font-size:10px;background:rgba(255,255,255,.4);
+}
+.workflow-step.active{color:var(--jade-deep);font-weight:700}
+.workflow-step.active .num{background:var(--jade);color:#fff;border-color:var(--jade)}
+.workflow-step.done{color:var(--jade)}
+.workflow-step.done .num{background:var(--jade-pale);border-color:rgba(62,116,104,.35);color:var(--jade-deep)}
+.workflow-line{width:30px;height:1px;background:var(--line-strong);margin:0 9px}
+.disclaimer-bar{
+  display:flex;align-items:flex-start;gap:11px;margin:12px 0 14px;padding:10px 14px;
+  border:1px solid rgba(152,98,76,.24);border-left:3px solid var(--clay);border-radius:9px;
+  background:rgba(251,248,240,.75);color:var(--ink-soft);font-size:12.2px;
+}
+.disclaimer-bar strong{color:var(--clay);white-space:nowrap;flex:0 0 auto}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:33px;
+  border:1px solid var(--line-strong);border-radius:8px;background:rgba(255,253,248,.8);
+  padding:6px 11px;font-size:12px;font-weight:600;color:var(--ink);line-height:1.2;
+  transition:background .16s,border-color .16s,box-shadow .16s,transform .16s;
+}
+.btn:hover:not(:disabled){background:#fffdf8;border-color:#ab9a82;box-shadow:0 3px 10px rgba(76,61,41,.07)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:focus-visible,.icon-btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid rgba(62,116,104,.52);outline-offset:2px;
+}
+.btn-primary{background:var(--jade-deep);border-color:var(--jade-deep);color:#fff}
+.btn-primary:hover:not(:disabled){background:#21483f;border-color:#21483f;box-shadow:0 4px 12px rgba(40,86,78,.19)}
+.btn-clay{background:var(--clay);border-color:var(--clay);color:#fff}
+.btn-clay:hover:not(:disabled){background:#81503d;border-color:#81503d;box-shadow:0 4px 12px rgba(152,98,76,.18)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--jade-deep)}
+.btn-ghost:hover:not(:disabled){background:rgba(62,116,104,.07);border-color:rgba(62,116,104,.16)}
+.btn-danger{color:var(--danger);border-color:rgba(166,64,53,.32);background:rgba(255,250,248,.75)}
+.btn-danger:hover:not(:disabled){background:var(--cinnabar-pale)}
+.btn-sm{min-height:27px;padding:3px 8px;font-size:11px;border-radius:6px}
+.btn-xs{min-height:23px;padding:2px 6px;font-size:10.5px;border-radius:5px}
+.icon-btn{
+  width:28px;height:28px;display:inline-grid;place-items:center;border:1px solid transparent;border-radius:6px;
+  background:transparent;color:var(--ink-soft);padding:0;
+}
+.icon-btn:hover{background:rgba(62,116,104,.08);border-color:rgba(62,116,104,.12)}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;
+  padding:3px 8px;background:rgba(255,253,248,.75);font-size:11px;color:var(--ink-soft);line-height:1.35;
+}
+.chip-jade{background:var(--jade-pale);border-color:rgba(62,116,104,.22);color:var(--jade-deep)}
+.chip-clay{background:var(--clay-pale);border-color:rgba(152,98,76,.22);color:var(--clay)}
+.chip-cinnabar{background:var(--cinnabar-pale);border-color:rgba(178,75,61,.24);color:var(--danger)}
+.status-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;
+  background:var(--jade-pale);border:1px solid rgba(62,116,104,.2);color:var(--jade-deep);font-weight:700;
+  white-space:nowrap;
+}
+.status-pill.muted{background:rgba(232,227,216,.65);border-color:var(--line);color:var(--ink-faint);font-weight:600}
+.status-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.dashboard{
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  grid-template-areas:"explore scheme" "keywords tree";
+  grid-template-rows:minmax(575px,1.18fr) minmax(460px,.82fr);
+  gap:14px;height:calc(100vh - 202px);min-height:1048px;
+}
+.panel{
+  min-width:0;min-height:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);
+  background:linear-gradient(160deg,rgba(255,253,248,.96),rgba(250,246,237,.94));
+  box-shadow:var(--shadow-soft);overflow:hidden;position:relative;
+}
+.panel::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--jade),rgba(62,116,104,.14) 42%,rgba(178,75,61,.35));
+  opacity:.76;pointer-events:none;
+}
+.panel-explore{grid-area:explore}
+.panel-keywords{grid-area:keywords}
+.panel-scheme{grid-area:scheme}
+.panel-tree{grid-area:tree}
+.panel-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 16px 11px;
+  border-bottom:1px solid rgba(217,207,189,.7);flex:0 0 auto;
+}
+.panel-title-wrap{min-width:0}
+.panel-kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--jade);text-transform:uppercase;margin-bottom:3px}
+.panel-head h2{margin:0;font-size:17px;line-height:1.3}
+.panel-sub{margin:4px 0 0;font-size:11px;color:var(--ink-faint);line-height:1.45}
+.panel-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.panel-body{min-height:0;flex:1 1 auto;overflow:auto;padding:14px 16px 16px;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.panel-body::-webkit-scrollbar{width:7px;height:7px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:10px}
+.panel-body::-webkit-scrollbar-track{background:transparent}
+.empty-state{
+  min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border:1px dashed var(--line-strong);border-radius:11px;padding:24px 18px;color:var(--ink-faint);
+  background:linear-gradient(180deg,rgba(255,253,248,.55),rgba(246,241,231,.5));
+}
+.empty-mark{font-family:var(--serif);font-size:30px;color:rgba(62,116,104,.35);line-height:1;margin-bottom:9px}
+.empty-state h3{margin:0 0 5px;font-size:15px;color:var(--ink-soft)}
+.empty-state p{margin:0;max-width:420px;font-size:12px;line-height:1.65}
+/* ===== 弹球探索区 ===== */
+.mode-strip{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap;
+}
+.segmented{
+  display:inline-flex;padding:3px;border:1px solid var(--line);border-radius:8px;
+  background:rgba(239,232,216,.68);
+}
+.segmented button{
+  border:0;border-radius:6px;background:transparent;padding:5px 10px;font-size:11px;color:var(--ink-faint);
+  font-weight:600;white-space:nowrap;
+}
+.segmented button.active{background:var(--surface-strong);color:var(--jade-deep);box-shadow:0 1px 5px rgba(76,61,41,.1)}
+.segmented button:disabled{opacity:.55}
+.collision-stats{display:flex;align-items:center;gap:10px;font-size:10.5px;color:var(--ink-faint);flex-wrap:wrap}
+.collision-stats strong{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:600}
+.canvas-shell{
+  position:relative;border:1px solid rgba(199,185,163,.78);border-radius:12px;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(255,253,248,.94),rgba(242,236,223,.74) 66%,rgba(234,225,208,.75)),
+    linear-gradient(180deg,#faf6ed,#f0e9da);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
+  height:clamp(292px,31vh,372px);min-height:280px;
+}
+#ballCanvas{width:100%;height:100%;display:block;touch-action:manipulation}
+.canvas-hint{
+  position:absolute;left:10px;bottom:8px;right:10px;display:flex;justify-content:space-between;gap:8px;
+  align-items:center;pointer-events:none;color:rgba(101,95,85,.72);font-size:9.5px;
+}
+.canvas-hint span:last-child{font-family:var(--mono);letter-spacing:.02em}
+.ball-controls{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:9px;
+}
+.ball-controls .btn{width:100%;padding-left:5px;padding-right:5px;font-size:11px;min-height:30px}
+.speed-row{
+  display:flex;align-items:center;gap:9px;margin-top:9px;padding:7px 9px;border:1px solid rgba(217,207,189,.8);
+  border-radius:8px;background:rgba(255,253,248,.6);
+}
+.speed-row label{font-size:10.5px;color:var(--ink-soft);white-space:nowrap;font-weight:600}
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--jade),var(--line));
+  outline:none;flex:1;min-width:70px;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--surface-strong);
+  border:2px solid var(--jade);box-shadow:0 1px 4px rgba(40,86,78,.24);cursor:pointer;
+}
+input[type="range"]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--surface-strong);border:2px solid var(--jade);cursor:pointer}
+.range-value{font-family:var(--mono);font-size:10.5px;color:var(--jade-deep);min-width:42px;text-align:right}
+.dim-lock-panel{margin-top:8px}
+.mini-label{font-size:9.5px;color:var(--ink-faint);letter-spacing:.06em;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lock-chips{display:flex;gap:5px;flex-wrap:wrap}
+.lock-chip{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 7px 3px 5px;border:1px solid var(--line);
+  border-radius:999px;background:rgba(255,253,248,.62);font-size:10px;color:var(--ink-soft);user-select:none;
+}
+.lock-chip input{accent-color:var(--jade);width:12px;height:12px;margin:0}
+.lock-chip:has(input:checked){border-color:rgba(152,98,76,.4);background:var(--clay-pale);color:var(--clay)}
+.lock-chip:has(input:disabled){opacity:.5}
+.hit-strip{
+  display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(217,207,189,.9);
+  flex-wrap:wrap;font-size:10px;color:var(--ink-faint);
+}
+.hit-tag{
+  display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px;border:1px solid var(--line);
+  background:rgba(240,235,224,.6);font-size:9.5px;color:var(--ink-faint);
+}
+.hit-tag.hit{background:var(--jade-pale);border-color:rgba(62,116,104,.25);color:var(--jade-deep);font-weight:600}
+.hit-tag.hit::before{content:"·";font-size:15px;line-height:0;color:var(--cinnabar)}
+.ball-status{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;padding:6px 8px;
+  background:rgba(228,238,233,.4);border-radius:6px;border-left:2px solid var(--jade);
+  font-size:10.5px;color:var(--ink-soft);min-height:29px;
+}
+.ball-status strong{color:var(--jade-deep);font-weight:600}
+.ball-status .timer{font-family:var(--mono);font-size:10px;color:var(--ink-faint);white-space:nowrap}
+
+/* ===== 关键词库 ===== */
+.keyword-groups{display:flex;flex-direction:column;gap:7px}
+.kw-group{border:1px solid var(--line);border-radius:9px;background:rgba(255,253,248,.56);overflow:hidden}
+.kw-head{
+  width:100%;display:flex;align-items:center;gap:8px;border:0;background:transparent;padding:8px 10px;
+  text-align:left;color:var(--ink);font-size:12px;font-weight:700;
+}
+.kw-head:hover{background:rgba(62,116,104,.035)}
+.kw-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:var(--jade)}
+.kw-dot.theme{background:var(--cinnabar)}
+.kw-dot.carrier{background:var(--jade)}
+.kw-dot.pattern{background:var(--clay)}
+.kw-dot.color{background:#a78345}
+.kw-dot.material{background:#6b6152}
+.kw-count{
+  margin-left:auto;font-family:var(--mono);font-size:9.5px;color:var(--ink-faint);
+  border:1px solid var(--line);border-radius:999px;padding:1px 6px;background:rgba(255,255,255,.44);
+  font-weight:400;
+}
+.kw-caret{font-size:9px;color:var(--ink-faint);transition:transform .16s;width:12px;text-align:center}
+.kw-group.open .kw-caret{transform:rotate(90deg)}
+.kw-body{display:none;padding:0 9px 9px;border-top:1px dashed rgba(217,207,189,.72)}
+.kw-group.open .kw-body{display:block}
+.kw-chips{display:flex;flex-wrap:wrap;gap:4px;padding-top:8px}
+.kw-item{
+  display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:6px;
+  background:#fffdf8;padding:2px 3px 2px 7px;font-size:10.5px;max-width:100%;
+}
+.kw-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.kw-item .icon-btn{width:20px;height:20px;font-size:10px;border-radius:4px;color:var(--ink-faint)}
+.kw-item .icon-btn:hover{color:var(--danger);background:var(--cinnabar-pale)}
+.kw-add{display:flex;gap:5px;margin-top:7px}
+.kw-add input{flex:1;min-width:0;height:28px;border:1px solid var(--line);border-radius:6px;background:#fffdf8;padding:4px 7px;font-size:11px}
+.kw-add .btn{flex:0 0 auto;min-height:28px}
+.kw-edit-row{display:flex;gap:4px;margin-top:7px}
+.kw-edit-row input{flex:1;height:28px;border:1px solid var(--jade);border-radius:6px;padding:4px 7px;font-size:11px;background:#fffdf8}
+.keyword-footer{border-top:1px solid rgba(217,207,189,.8);padding:10px 16px 12px;background:rgba(247,242,232,.65);flex:0 0 auto}
+.keyword-footer .btn-row{display:flex;gap:5px;flex-wrap:wrap}
+.kw-note{font-size:9.8px;color:var(--ink-faint);margin:6px 0 0;line-height:1.5}
+
+/* ===== 当前物元 & 变换 ===== */
+.scheme-stage{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.scheme-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;flex-wrap:wrap;
+}
+.scheme-id{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint)}
+.scheme-id strong{font-family:var(--serif);font-size:14px;color:var(--ink);letter-spacing:.03em}
+.badge-type{
+  display:inline-flex;align-items:center;gap:4px;border-radius:4px;padding:2px 6px;font-size:9.5px;
+  font-weight:700;letter-spacing:.02em;background:var(--jade-pale);color:var(--jade-deep);border:1px solid rgba(62,116,104,.2);
+}
+.badge-type.manual{background:var(--clay-pale);border-color:rgba(152,98,76,.22);color:var(--clay)}
+.badge-type.combo{background:#f1ead9;border-color:rgba(167,131,69,.25);color:#7e612b}
+.formula-card{
+  border:1px solid rgba(62,116,104,.22);border-radius:10px;background:
+    linear-gradient(145deg,rgba(228,238,233,.62),rgba(255,253,248,.8));padding:11px 12px;margin-bottom:10px;
+  position:relative;overflow:hidden;
+}
+.formula-card::before{
+  content:"R";position:absolute;right:9px;top:-11px;font-family:var(--serif);font-size:76px;color:rgba(62,116,104,.055);
+  font-weight:700;pointer-events:none;
+}
+.formula-main{font-family:var(--mono);font-size:10.5px;line-height:1.65;color:var(--ink-soft);word-break:break-word;position:relative}
+.formula-main .r{color:var(--cinnabar);font-weight:700}
+.formula-main .n{color:var(--jade-deep);font-weight:700}
+.dim-table{display:flex;flex-direction:column;gap:5px}
+.dim-row{
+  display:grid;grid-template-columns:54px minmax(0,1fr) 54px;gap:6px;align-items:center;
+  border:1px solid rgba(217,207,189,.8);border-radius:7px;padding:4px 5px 4px 8px;background:rgba(255,253,248,.55);
+}
+.dim-row.edited{border-color:rgba(167,131,69,.42);background:#fbf6e9}
+.dim-name{font-size:10px;font-weight:700;color:var(--ink-soft);display:flex;align-items:center;gap:4px}
+.dim-name::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--jade)}
+.dim-row:nth-child(1) .dim-name::before{background:var(--cinnabar)}
+.dim-row:nth-child(3) .dim-name::before{background:var(--clay)}
+.dim-row:nth-child(4) .dim-name::before{background:var(--gold)}
+.dim-row:nth-child(5) .dim-name::before{background:#6b6152}
+.dim-row input[type="text"]{
+  width:100%;height:27px;border:1px solid transparent;border-radius:5px;background:transparent;
+  padding:3px 5px;font-size:11.5px;color:var(--ink);min-width:0;
+}
+.dim-row input[type="text"]:hover:not(:disabled){border-color:rgba(217,207,189,.9);background:rgba(255,255,255,.5)}
+.dim-row input[type="text"]:focus{border-color:var(--jade);background:#fffdf8}
+.dim-row input[type="text"]:disabled{color:var(--ink-faint);background:rgba(238,233,223,.45)}
+.lock-mini{display:flex;align-items:center;justify-content:flex-end;gap:3px;font-size:9px;color:var(--ink-faint);white-space:nowrap}
+.lock-mini input{accent-color:var(--clay);width:11px;height:11px;margin:0}
+.dirty-note{color:var(--gold);font-size:10px;font-weight:600}
+.eval-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
+.eval-card{
+  border:1px solid var(--line);border-radius:8px;background:rgba(255,253,248,.6);padding:7px 8px;min-width:0;
+}
+.eval-head{display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:9.5px;color:var(--ink-faint)}
+.eval-score{font-family:var(--mono);font-size:15px;font-weight:700;line-height:1.2;color:var(--jade-deep)}
+.eval-score.warn{color:var(--warning)}
+.eval-score.bad{color:var(--danger)}
+.eval-bar{height:3px;background:rgba(217,207,189,.65);border-radius:99px;overflow:hidden;margin:4px 0}
+.eval-bar i{display:block;height:100%;background:var(--jade);border-radius:99px}
+.eval-bar i.warn{background:var(--warning)}
+.eval-bar i.bad{background:var(--danger)}
+.eval-explain{font-size:8.8px;line-height:1.4;color:var(--ink-faint);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.eval-conflict{grid-column:1/-1;border:1px solid rgba(178,75,61,.2);background:rgba(244,227,222,.4);border-radius:7px;padding:6px 8px;font-size:9.5px;color:var(--clay)}
+.eval-disclaimer{font-size:8.8px;color:var(--ink-faint);margin:5px 0 0;text-align:right}
+.scheme-actions{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 12px;padding-bottom:11px;border-bottom:1px dashed rgba(217,207,189,.9)}
+.scheme-section-title{display:flex;align-items:center;gap:7px;margin:0 0 8px;font-family:var(--serif);font-size:13.5px}
+.scheme-section-title::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent)}
+.scheme-section-title .badge{font-family:var(--sans);font-size:9px;font-weight:600;color:var(--ink-faint);border:1px solid var(--line);padding:1px 5px;border-radius:3px}
+.transform-box{border:1px solid var(--line);border-radius:9px;background:rgba(250,246,237,.62);overflow:hidden}
+.transform-tabs,.type-tabs{
+  display:flex;gap:3px;padding:4px;background:rgba(239,232,216,.56);border-bottom:1px solid var(--line);
+  overflow-x:auto;scrollbar-width:none;
+}
+.transform-tabs::-webkit-scrollbar,.type-tabs::-webkit-scrollbar{display:none}
+.transform-tabs button,.type-tabs button{
+  border:1px solid transparent;border-radius:5px;background:transparent;padding:4px 9px;font-size:10.5px;
+  color:var(--ink-faint);white-space:nowrap;font-weight:600;
+}
+.transform-tabs button.active{background:var(--surface-strong);color:var(--jade-deep);border-color:rgba(62,116,104,.12);box-shadow:0 1px 3px rgba(76,61,41,.07)}
+.type-tabs{padding:5px 6px;background:rgba(255,253,248,.55)}
+.type-tabs button{font-size:10px;padding:3px 7px;border-color:var(--line);background:rgba(255,255,255,.34)}
+.type-tabs button.active{background:var(--jade-deep);color:#fff;border-color:var(--jade-deep)}
+.transform-content{padding:10px}
+.auto-card{border:1px solid rgba(62,116,104,.2);border-radius:8px;padding:9px 10px;background:rgba(228,238,233,.36)}
+.auto-card-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.auto-card h4{margin:0;font-size:12px;color:var(--jade-deep)}
+.auto-card p{margin:6px 0 0;font-size:10.2px;color:var(--ink-soft);line-height:1.55}
+.auto-status-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}
+.auto-stat{border:1px solid rgba(62,116,104,.16);border-radius:6px;background:rgba(255,253,248,.56);padding:5px 6px;text-align:center}
+.auto-stat strong{display:block;font-family:var(--mono);font-size:12px;color:var(--jade-deep)}
+.auto-stat span{font-size:8.6px;color:var(--ink-faint)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed rgba(217,207,189,.8);margin-top:8px}
+.switch-label{font-size:10.5px;color:var(--ink-soft)}
+.switch{position:relative;display:inline-flex;width:36px;height:20px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:#cfc5b4;border-radius:99px;transition:.18s;cursor:pointer}
+.switch span::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.17)}
+.switch input:checked + span{background:var(--jade)}
+.switch input:checked + span::after{transform:translateX(16px)}
+.recommend-list{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.recommend-item{
+  display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);
+  border-radius:7px;padding:6px 7px;background:rgba(255,253,248,.6);font-size:10px;
+}
+.recommend-item .rec-copy{min-width:0}
+.recommend-item strong{color:var(--ink);font-size:10.5px}
+.recommend-item span{display:block;color:var(--ink-faint);margin-top:1px;line-height:1.4}
+.constraint-card{margin-top:10px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:rgba(255,253,248,.58)}
+.constraint-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.constraint-head label{font-size:10.5px;font-weight:700;color:var(--ink-soft)}
+.constraint-level{font-size:9.5px;color:var(--clay);font-weight:700;background:var(--clay-pale);border-radius:4px;padding:1px 6px}
+.constraint-explain{font-size:9.2px;line-height:1.5;color:var(--ink-faint);margin:4px 0 0}
+.manual-form{display:flex;flex-direction:column;gap:7px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.form-field{display:flex;flex-direction:column;gap:2px;min-width:0}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:9.3px;font-weight:700;color:var(--ink-soft);letter-spacing:.02em}
+.form-field label .req{color:var(--cinnabar)}
+.form-field input[type="text"],.form-field select,.form-field textarea{
+  width:100%;border:1px solid var(--line);border-radius:5px;background:#fffdf8;padding:5px 6px;
+  font-size:10.5px;min-height:28px;min-width:0;
+}
+.form-field textarea{resize:vertical;min-height:42px;line-height:1.4}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--jade);outline:none;box-shadow:0 0 0 2px rgba(62,116,104,.08)}
+.form-field .hint{font-size:8.6px;color:var(--ink-faint);line-height:1.35}
+.preview-box{border:1px dashed rgba(62,116,104,.3);border-radius:7px;background:rgba(228,238,233,.25);padding:7px 8px}
+.preview-title{font-size:8.8px;letter-spacing:.06em;color:var(--jade-deep);font-weight:700;margin-bottom:3px}
+.preview-line{display:grid;grid-template-columns:48px minmax(0,1fr);gap:5px;font-size:9.5px;line-height:1.45;padding:2px 0}
+.preview-line .old{color:var(--ink-faint);text-decoration:line-through;text-decoration-color:rgba(178,75,61,.45);word-break:break-word}
+.preview-line .arrow{color:var(--cinnabar);text-align:center;font-family:var(--mono)}
+.preview-line .new{color:var(--jade-deep);font-weight:600;word-break:break-word}
+.apply-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:1px}
+.apply-note{font-size:8.6px;color:var(--ink-faint);line-height:1.35}
+.combo-mode-tabs{display:flex;gap:4px;margin-bottom:7px}
+.combo-mode-tabs button{flex:1;border:1px solid var(--line);border-radius:5px;background:rgba(255,253,248,.65);font-size:9.8px;padding:4px 5px;color:var(--ink-faint)}
+.combo-mode-tabs button.active{background:var(--jade-pale);border-color:rgba(62,116,104,.35);color:var(--jade-deep);font-weight:700}
+.combo-sheet{display:flex;flex-direction:column;gap:4px}
+.combo-row{display:grid;grid-template-columns:42px minmax(0,1fr) minmax(0,1fr);gap:5px;align-items:center;font-size:9.3px}
+.combo-row select{width:100%;border:1px solid var(--line);border-radius:4px;background:#fffdf8;padding:4px 3px;font-size:9.3px;min-width:0}
+.combo-row .dim{font-weight:700;color:var(--ink-soft)}
+.combo-preview{margin-top:6px;font-size:9.2px;line-height:1.45;color:var(--ink-soft);background:rgba(255,253,248,.62);border:1px solid var(--line);border-radius:5px;padding:5px 6px}
+.combo-preview b{color:var(--jade-deep)}
+/* ===== 方案树 ===== */
+.tree-tabs{
+  display:flex;gap:2px;padding:5px 7px;border-bottom:1px solid var(--line);background:rgba(239,232,216,.48);
+  flex:0 0 auto;overflow-x:auto;scrollbar-width:none;
+}
+.tree-tabs::-webkit-scrollbar{display:none}
+.tree-tabs button{
+  border:1px solid transparent;border-radius:5px;background:transparent;padding:4px 9px;white-space:nowrap;
+  font-size:10.5px;color:var(--ink-faint);font-weight:600;
+}
+.tree-tabs button.active{background:var(--surface-strong);color:var(--jade-deep);border-color:rgba(62,116,104,.14);box-shadow:0 1px 3px rgba(76,61,41,.05)}
+.tree-tabs .tab-count{font-family:var(--mono);font-size:8.5px;margin-left:3px;color:var(--ink-faint)}
+.active-node-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  margin-bottom:9px;padding:7px 9px;border:1px solid rgba(62,116,104,.18);border-radius:7px;
+  background:rgba(228,238,233,.35);font-size:10px;color:var(--ink-soft);
+}
+.active-node-bar strong{color:var(--jade-deep);font-family:var(--mono);font-size:10.5px}
+.active-node-actions{display:flex;gap:4px;flex-wrap:wrap}
+.mark-btn.active-excellent{background:var(--jade-pale);border-color:rgba(62,116,104,.35);color:var(--jade-deep)}
+.mark-btn.active-optimize{background:#f8edcd;border-color:rgba(167,131,69,.4);color:#7e612b}
+.tree-wrap{padding:2px 0 8px}
+.tree-root-node{margin-bottom:2px}
+.tree-node{
+  border:1px solid var(--line);border-radius:7px;background:rgba(255,253,248,.75);padding:6px 7px;
+  margin:4px 0;transition:border-color .16s,box-shadow .16s,background .16s;position:relative;
+}
+.tree-node:hover{border-color:rgba(62,116,104,.32);background:#fffdf8}
+.tree-node.active{border-color:var(--jade);box-shadow:0 0 0 2px rgba(62,116,104,.08);background:rgba(228,238,233,.3)}
+.tree-node.compare-on{border-left:3px solid var(--jade);padding-left:5px}
+.tree-node-head{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.tree-node-title{display:flex;align-items:center;gap:5px;min-width:0;flex-wrap:wrap}
+.tree-node-title strong{font-family:var(--mono);font-size:10px;color:var(--jade-deep);font-weight:700;white-space:nowrap}
+.tree-node-title .scheme-name{font-family:var(--sans);font-size:10px;color:var(--ink-soft);font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree-node-type{font-size:8.5px;padding:1px 5px;border-radius:3px;background:var(--clay-pale);color:var(--clay);border:1px solid rgba(152,98,76,.17);white-space:nowrap}
+.tree-node-type.root{background:var(--jade-pale);color:var(--jade-deep);border-color:rgba(62,116,104,.2)}
+.tree-node-actions{display:flex;align-items:center;gap:2px;flex:0 0 auto}
+.tree-compare-label{display:inline-flex;align-items:center;gap:2px;font-size:8.5px;color:var(--ink-faint);white-space:nowrap;cursor:pointer}
+.tree-compare-label input{width:10px;height:10px;accent-color:var(--jade);margin:0}
+.tree-node-values{
+  display:flex;flex-wrap:wrap;gap:2px 7px;margin-top:4px;font-size:8.8px;color:var(--ink-faint);line-height:1.4;
+}
+.tree-node-values b{color:var(--ink-soft);font-weight:600}
+.tree-mark{font-size:9px;padding:1px 4px;border-radius:3px;white-space:nowrap}
+.tree-mark.excellent{color:var(--jade-deep);background:var(--jade-pale)}
+.tree-mark.optimize{color:#7e612b;background:#f8edcd}
+.tree-children{
+  list-style:none;margin:0;padding:0 0 0 19px;position:relative;
+}
+.tree-children::before{content:"";position:absolute;left:8px;top:0;bottom:18px;border-left:1px solid rgba(199,185,163,.75)}
+.tree-children > li{position:relative;padding-left:9px}
+.tree-children > li::before{content:"";position:absolute;left:-11px;top:23px;width:19px;border-top:1px solid rgba(199,185,163,.75)}
+.tree-children > li:last-child::after{
+  content:"";position:absolute;left:-12px;top:23px;bottom:0;width:12px;background:var(--surface);
+}
+.tree-empty{border:1px dashed var(--line-strong);border-radius:7px;padding:16px;font-size:10.5px;color:var(--ink-faint);text-align:center}
+.compare-tray{
+  display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:8px 0;padding:7px 8px;border:1px solid var(--line);
+  border-radius:7px;background:rgba(255,253,248,.6);font-size:9.5px;color:var(--ink-faint);
+}
+.compare-tray .chip{font-size:9.5px}
+.compare-help{margin:0 0 9px;font-size:10px;line-height:1.55;color:var(--ink-faint)}
+.table-scroll{overflow:auto;border:1px solid var(--line);border-radius:7px;max-width:100%}
+.compare-table{width:100%;border-collapse:collapse;font-size:9.8px;min-width:620px;background:rgba(255,253,248,.64)}
+.compare-table th,.compare-table td{padding:6px 7px;border-bottom:1px solid rgba(217,207,189,.68);text-align:left;vertical-align:top}
+.compare-table th{background:rgba(239,232,216,.68);font-size:9.2px;color:var(--ink-soft);font-weight:700;white-space:nowrap;position:sticky;top:0;z-index:1}
+.compare-table tr:last-child td{border-bottom:0}
+.compare-table td.diff{background:rgba(244,227,222,.3);color:var(--clay);font-weight:600}
+.compare-table td.same{color:var(--ink-soft)}
+.compare-score{font-family:var(--mono);font-weight:700}
+.compare-score.good{color:var(--jade-deep)}
+.compare-score.mid{color:var(--warning)}
+.compare-score.low{color:var(--danger)}
+.report-row{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.report-row .btn{font-size:10px}
+.logs-list{display:flex;flex-direction:column;gap:6px}
+.log-item{
+  position:relative;border:1px solid var(--line);border-radius:7px;background:rgba(255,253,248,.66);
+  padding:7px 8px 7px 11px;font-size:9.8px;
+}
+.log-item::before{content:"";position:absolute;left:3px;top:9px;bottom:9px;width:2px;border-radius:2px;background:var(--jade)}
+.log-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+.log-seq{font-family:var(--mono);font-size:9px;color:var(--ink-faint)}
+.log-type{font-size:9px;font-weight:700;color:var(--clay);background:var(--clay-pale);border:1px solid rgba(152,98,76,.18);border-radius:3px;padding:1px 5px}
+.log-time{margin-left:auto;font-family:var(--mono);font-size:8.5px;color:var(--ink-faint)}
+.log-target{font-size:9px;color:var(--jade-deep);background:rgba(228,238,233,.55);padding:1px 4px;border-radius:3px}
+.log-change{color:var(--ink-soft);line-height:1.52;word-break:break-word}
+.log-change .old{color:var(--ink-faint);text-decoration:line-through;text-decoration-color:rgba(178,75,61,.4)}
+.log-change .new{color:var(--jade-deep);font-weight:600}
+.log-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:3px;font-size:8.7px;color:var(--ink-faint)}
+.log-warning{color:var(--danger);font-weight:700}
+.log-link{border:0;background:transparent;color:var(--jade-deep);font-size:8.7px;padding:0;text-decoration:underline;text-underline-offset:2px}
+.audit-section{margin-top:10px;padding-top:8px;border-top:1px dashed rgba(217,207,189,.9)}
+.audit-title{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--ink-soft);font-weight:700;margin-bottom:5px}
+.audit-item{font-size:9px;color:var(--ink-faint);padding:4px 0;border-bottom:1px dotted rgba(217,207,189,.7)}
+.audit-item:last-child{border-bottom:0}
+.audit-item strong{color:var(--danger);font-weight:600}
+
+/* ===== 关于、页脚、提示 ===== */
+.about-section{
+  margin-top:15px;display:grid;grid-template-columns:1.1fr .9fr;gap:16px;border:1px solid var(--line);border-radius:14px;
+  padding:20px 22px;background:
+    linear-gradient(145deg,rgba(255,253,248,.9),rgba(246,241,231,.86));box-shadow:var(--shadow-soft);
+}
+.about-left h2{margin:0 0 8px;font-size:20px}
+.about-left .about-lead{font-family:var(--serif);font-size:14px;line-height:1.9;color:var(--ink-soft);margin:0}
+.about-right{border-left:1px solid var(--line);padding-left:18px;display:flex;flex-direction:column;gap:9px}
+.about-principle{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;color:var(--ink-soft)}
+.about-principle .num{font-family:var(--mono);font-size:9px;color:var(--cinnabar);border:1px solid rgba(178,75,61,.25);border-radius:3px;padding:1px 4px;flex:0 0 auto;margin-top:1px}
+.about-principle strong{color:var(--ink);font-size:11.5px;display:block;margin-bottom:1px}
+.about-principle p{margin:0;line-height:1.5;font-size:10.5px;color:var(--ink-faint)}
+.disclaimer-panel{
+  margin-top:11px;border:1px solid rgba(178,75,61,.2);border-radius:9px;background:rgba(244,227,222,.32);
+  padding:9px 12px;font-size:10.5px;line-height:1.6;color:var(--ink-soft);
+}
+.disclaimer-panel strong{color:var(--clay)}
+.page-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 4px 2px;color:var(--ink-faint);font-size:10px}
+.page-footer .footer-right{font-family:var(--mono);letter-spacing:.02em}
+.toast-region{position:fixed;right:18px;bottom:18px;z-index:1500;display:flex;flex-direction:column;gap:7px;pointer-events:none;max-width:min(360px,calc(100vw - 32px))}
+.toast{
+  pointer-events:auto;background:#fffdf8;border:1px solid var(--line-strong);border-left:3px solid var(--jade);
+  border-radius:8px;box-shadow:0 9px 30px rgba(52,44,31,.17);padding:8px 11px;font-size:11.5px;color:var(--ink-soft);
+  animation:toastIn .2s ease-out;display:flex;align-items:flex-start;gap:8px;
+}
+.toast.success{border-left-color:var(--success)}
+.toast.error{border-left-color:var(--danger);background:#fff9f6}
+.toast.warning{border-left-color:var(--warning);background:#fffbf1}
+.toast.info{border-left-color:var(--jade)}
+.toast-mark{font-family:var(--serif);font-weight:700;color:var(--jade-deep);flex:0 0 auto;line-height:1.3}
+.toast.error .toast-mark{color:var(--danger)}
+.toast.warning .toast-mark{color:var(--warning)}
+@keyframes toastIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.modal-overlay{
+  position:fixed;inset:0;z-index:1400;background:rgba(45,39,31,.36);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay[hidden]{display:none}
+.modal-card{
+  width:min(680px,100%);max-height:min(84vh,900px);display:flex;flex-direction:column;
+  border:1px solid var(--line-strong);border-radius:13px;background:var(--surface-strong);
+  box-shadow:0 24px 80px rgba(40,33,23,.24);animation:modalIn .22s ease-out;overflow:hidden;
+}
+.modal-card.wide{width:min(880px,100%)}
+.modal-card.narrow{width:min(500px,100%)}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+.modal-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:15px 17px 12px;
+  border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(246,241,231,.55),rgba(255,253,248,.9));
+}
+.modal-head h3{margin:0;font-size:18px;line-height:1.3}
+.modal-head p{margin:4px 0 0;font-size:10.5px;color:var(--ink-faint);line-height:1.5}
+.modal-close{border:0;background:transparent;color:var(--ink-faint);font-size:20px;line-height:1;width:28px;height:28px;border-radius:5px}
+.modal-close:hover{background:var(--cinnabar-pale);color:var(--danger)}
+.modal-body{padding:15px 17px;overflow:auto;min-height:0}
+.modal-actions{
+  display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;padding:11px 17px 14px;border-top:1px solid rgba(217,207,189,.75);
+  background:rgba(247,242,232,.5);
+}
+.modal-actions .btn{min-width:80px}
+.modal-note{font-size:10.5px;line-height:1.6;color:var(--ink-faint)}
+.case-list{display:flex;flex-direction:column;gap:9px}
+.case-card{border:1px solid var(--line);border-radius:9px;background:linear-gradient(135deg,rgba(255,253,248,.9),rgba(243,237,224,.7));padding:11px 12px}
+.case-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:9px}
+.case-card h4{margin:0;font-size:13.5px}
+.case-card .case-desc{margin:4px 0 6px;font-size:10.5px;line-height:1.55;color:var(--ink-soft)}
+.case-values{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.case-values .chip{font-size:9.5px}
+.case-rec{font-size:9.5px;line-height:1.5;color:var(--ink-faint)}
+.case-rec strong{color:var(--clay)}
+.quick-values{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.quick-value{
+  border:1px solid var(--line);border-radius:6px;background:rgba(255,253,248,.7);padding:4px 8px;font-size:10.5px;color:var(--ink-soft);
+}
+.quick-value:hover{border-color:var(--jade);background:var(--jade-pale);color:var(--jade-deep)}
+.quick-value.selected{background:var(--jade-deep);border-color:var(--jade-deep);color:#fff}
+.quick-value.current{border-color:rgba(62,116,104,.55);background:rgba(62,116,104,.07);color:var(--jade-deep)}
+.quick-value small{display:block;font-size:8px;line-height:1.1;opacity:.72}
+.warning-hero{display:flex;gap:10px;align-items:flex-start;padding:10px 11px;border:1px solid rgba(178,75,61,.23);border-radius:8px;background:rgba(244,227,222,.45);margin-bottom:10px}
+.warning-icon{font-family:var(--serif);font-size:22px;line-height:1;color:var(--cinnabar);flex:0 0 auto}
+.warning-hero strong{display:block;font-size:12.5px;color:var(--danger);margin-bottom:2px}
+.warning-hero p{margin:0;font-size:10.5px;color:var(--ink-soft);line-height:1.55}
+.warning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.warning-stat{border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:rgba(255,253,248,.7)}
+.warning-stat span{display:block;font-size:8.8px;color:var(--ink-faint)}
+.warning-stat strong{font-family:var(--mono);font-size:15px;color:var(--warning)}
+.warning-stat.conflict strong{color:var(--danger);font-size:12px}
+.warning-conflicts{margin:0;padding-left:16px;font-size:10px;line-height:1.6;color:var(--ink-soft)}
+.warning-conflicts li{margin-bottom:2px}
+.import-error{white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:10.5px;color:var(--danger);background:rgba(244,227,222,.35);border:1px solid rgba(178,75,61,.18);border-radius:6px;padding:8px}
+.hidden{display:none!important}
+
+@media (max-width:1180px){
+  .app-shell{padding:12px 12px 20px}
+  .dashboard{
+    grid-template-columns:1fr;grid-template-areas:"explore" "keywords" "scheme" "tree";
+    grid-template-rows:none;height:auto;min-height:0;
+  }
+  .panel{max-height:none}
+  .panel-body{overflow:visible}
+  .canvas-shell{height:clamp(300px,52vw,420px)}
+  .about-section{grid-template-columns:1fr}
+  .about-right{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:12px}
+  .scheme-panel,.panel-scheme .panel-body{overflow:visible}
+}
+@media (max-width:720px){
+  .topbar{padding:14px;gap:12px;flex-direction:column}
+  .header-side{align-items:flex-start;width:100%}
+  .header-actions{justify-content:flex-start}
+  .brand-seal{width:45px;height:45px;font-size:23px;border-radius:9px}
+  .brand{gap:11px}
+  .brand-sub{font-size:11px}
+  .disclaimer-bar{display:block;line-height:1.6}
+  .disclaimer-bar strong{display:block;margin-bottom:2px}
+  .ball-controls{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .eval-grid{grid-template-columns:1fr}
+  .eval-conflict{grid-column:auto}
+  .auto-status-grid{grid-template-columns:1fr}
+  .dim-row{grid-template-columns:48px minmax(0,1fr) 48px}
+  .panel-head{padding:12px 12px 9px}
+  .panel-body{padding:11px 12px 13px}
+  .keyword-footer{padding:9px 12px 11px}
+  .about-section{padding:16px}
+  .about-left .about-lead{font-size:12.5px}
+  .modal-overlay{padding:10px}
+  .modal-card{max-height:90vh}
+  .warning-grid{grid-template-columns:1fr}
+  .tree-node-title .scheme-name{max-width:130px}
+  .canvas-hint{font-size:8.5px}
+  .toast-region{right:10px;bottom:10px}
+}
+@media (min-width:1600px){
+  .dashboard{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+</style>
+</head><body>
+<a class="skip-link" href="#dashboard">跳到研究工具主体</a>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-seal" aria-hidden="true">良</div>
+      <div class="brand-copy">
+        <div class="eyebrow">毕业设计研究原型 · 可拓学 × 良渚文化</div>
+        <h1>基于可拓变换的良渚文化文创创新构思实验平台</h1>
+        <p class="brand-sub">以物元 R=(N,c,v) 为构思单元：五维弹球发散生成初始方案，再以五种可拓变换持续生成可追溯的创意分支。</p>
+        <div class="workflow" aria-label="两阶段工作流">
+          <div class="workflow-step active" id="workflowStage1"><span class="num">01</span><span>弹球发散生成</span></div>
+          <span class="workflow-line"></span>
+          <div class="workflow-step" id="workflowStage2"><span class="num">02</span><span>方案可拓变换迭代</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="header-side">
+      <div class="header-actions">
+        <button class="btn btn-primary" type="button" id="openCaseBtn">载入良渚案例</button>
+        <button class="btn" type="button" id="exportReportTopBtn">导出研究报告</button>
+        <button class="btn" type="button" id="aboutBtn">关于本工具</button>
+        <button class="btn btn-danger" type="button" id="resetAllBtn">恢复全部默认</button>
+      </div>
+      <div class="save-note"><span class="save-dot" aria-hidden="true"></span><span id="saveStatus">本地数据已就绪</span></div>
+    </div>
+  </header>
+
+  <div class="disclaimer-bar" role="note">
+    <strong>研究免责声明</strong>
+    <span>本工具仅作为文创产品构思阶段的研究辅助原型，不进行 AI 绘图，也不自动判定文化真实性、艺术价值或市场价值。系统给出的文化关联性、工艺可行性与矛盾冲突均为简化规则提示，不替代设计师、考古与工艺专家的判断。</span>
+  </div>
+
+  <main class="dashboard" id="dashboard">
+    <section class="panel panel-explore" aria-labelledby="exploreTitle">
+      <header class="panel-head">
+        <div class="panel-title-wrap">
+          <div class="panel-kicker">01 / Ball Exploration</div>
+          <h2 id="exploreTitle">弹球探索区</h2>
+          <p class="panel-sub">正五边形五边对应五维；真实线段碰撞与顶点判定驱动发散或变换。</p>
+        </div>
+        <div class="panel-tools">
+          <span class="status-pill" id="ballModeBadge"><span class="status-dot"></span>阶段一 · 发散模式</span>
+        </div>
+      </header>
+      <div class="panel-body">
+        <div class="mode-strip">
+          <div class="segmented" aria-label="弹球模式">
+            <button type="button" id="modeDivergenceBtn" class="active">发散模式</button>
+            <button type="button" id="modeSemiBtn">半自动变换模式</button>
+          </div>
+          <div class="collision-stats" aria-live="polite">
+            <span>碰撞 <strong id="collisionCount">0</strong></span>
+            <span>顶点 <strong id="vertexCount">0</strong></span>
+            <span>触发 <strong id="transformTriggerCount">0</strong></span>
+          </div>
+        </div>
+        <div class="canvas-shell">
+          <canvas id="ballCanvas" aria-label="五维物元正五边形弹球画布，可点击边编辑维度"></canvas>
+          <div class="canvas-hint"><span>点击维度边可直接维护该维特征</span><span id="canvasModeHint">PENTAGON / 5D</span></div>
+        </div>
+        <div class="ball-controls">
+          <button class="btn btn-primary" type="button" id="startBallBtn">开始弹射</button>
+          <button class="btn" type="button" id="pauseBallBtn" disabled>暂停</button>
+          <button class="btn" type="button" id="resetBallBtn">重置弹球</button>
+          <button class="btn btn-clay" type="button" id="singleHitBtn">单次碰撞</button>
+        </div>
+        <div class="speed-row">
+          <label for="speedSlider">弹球速度</label>
+          <input type="range" id="speedSlider" min="80" max="280" step="10" value="170" aria-label="弹球速度">
+          <span class="range-value" id="speedValue">170 px/s</span>
+        </div>
+        <div class="dim-lock-panel">
+          <div class="mini-label"><span>维度锁定（仅约束弹球碰撞替换）</span><span id="lockHint">初始方案集齐后生效</span></div>
+          <div class="lock-chips" id="dimensionLocks"></div>
+        </div>
+        <div class="hit-strip" id="hitStrip" aria-live="polite"></div>
+        <div class="ball-status">
+          <span id="ballStatusText"><strong>等待开始</strong> · 弹球将在五边形内部运动，撞边采样关键词</span>
+          <span class="timer" id="interiorTimer"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-keywords" aria-labelledby="keywordTitle">
+      <header class="panel-head">
+        <div class="panel-title-wrap">
+          <div class="panel-kicker">02 / Lexicon</div>
+          <h2 id="keywordTitle">关键词库面板</h2>
+          <p class="panel-sub">五维词库可增删改；导入先校验，失败不覆盖现有数据。</p>
+        </div>
+        <div class="panel-tools">
+          <span class="chip chip-jade" id="keywordTotal">0 个词</span>
+        </div>
+      </header>
+      <div class="panel-body">
+        <div class="keyword-groups" id="keywordGroups"></div>
+      </div>
+      <div class="keyword-footer">
+        <div class="btn-row">
+          <button class="btn btn-sm" type="button" id="restoreKeywordsBtn">恢复默认词库</button>
+          <button class="btn btn-sm" type="button" id="exportKeywordsBtn">导出词库 JSON</button>
+          <button class="btn btn-sm" type="button" id="importKeywordsBtn">导入词库 JSON</button>
+          <button class="btn btn-sm" type="button" id="exportAllBtn">导出全量数据</button>
+          <button class="btn btn-sm" type="button" id="importAllBtn">导入全量数据</button>
+        </div>
+        <p class="kw-note">所有修改自动保存至 localStorage。导入全量数据会先完整校验格式，校验通过并确认后才替换当前研究数据。</p>
+        <input type="file" id="keywordFileInput" accept=".json,application/json" hidden>
+        <input type="file" id="fullFileInput" accept=".json,application/json" hidden>
+      </div>
+    </section>
+
+    <section class="panel panel-scheme" aria-labelledby="schemeTitle">
+      <header class="panel-head">
+        <div class="panel-title-wrap">
+          <div class="panel-kicker">03 / Matter-Element & Extension</div>
+          <h2 id="schemeTitle">物元方案 &amp; 可拓变换</h2>
+          <p class="panel-sub">方案以只增不改的节点保存；每次变换都从当前起点生成新子方案。</p>
+        </div>
+        <div class="panel-tools"><span class="status-pill muted" id="activeSchemeBadge">尚未生成方案</span></div>
+      </header>
+      <div class="panel-body" id="schemeContent"></div>
+    </section>
+
+    <section class="panel panel-tree" aria-labelledby="treeTitle">
+      <header class="panel-head">
+        <div class="panel-title-wrap">
+          <div class="panel-kicker">04 / Branching & Trace</div>
+          <h2 id="treeTitle">方案树与历史变换链</h2>
+          <p class="panel-sub">点击节点查看并设为新起点；勾选两个方案可比较。</p>
+        </div>
+        <div class="panel-tools">
+          <span class="chip" id="treeNodeCount">0 个节点</span>
+        </div>
+      </header>
+      <div class="tree-tabs" role="tablist" aria-label="方案树视图">
+        <button type="button" class="active" id="treeTabBtn" role="tab" aria-selected="true">方案树 <span class="tab-count" id="treeTabCount">0</span></button>
+        <button type="button" id="compareTabBtn" role="tab" aria-selected="false">方案对比 <span class="tab-count" id="compareTabCount">0/2</span></button>
+        <button type="button" id="logTabBtn" role="tab" aria-selected="false">变换链 <span class="tab-count" id="logTabCount">0</span></button>
+      </div>
+      <div class="panel-body" id="treeContent"></div>
+    </section>
+  </main>
+
+  <section class="about-section" id="about">
+    <div class="about-left">
+      <div class="panel-kicker">About / Research Note</div>
+      <h2>关于本工具</h2>
+      <p class="about-lead">本原型是毕业设计研究工具，基于可拓学物元与可拓变换理论，用于文创产品构思阶段发散迭代。系统输出的关联性、可行性仅为规则化辅助提示，不代表客观评判，方案文化真实性、艺术价值需要设计师与专家进一步验证。</p>
+      <div class="disclaimer-panel"><strong>边界声明：</strong>工具不生成图像，不替代设计决策，不宣称自动计算可拓关联函数或客观文化评分。所有评价与警告均由透明的简化规则产生，用于研究演示与讨论。</div>
+    </div>
+    <div class="about-right">
+      <div class="about-principle"><span class="num">01</span><div><strong>物元模型</strong><p>以 R=(N,c,v) 记录文创产品 N 在主题、载体、纹样、色彩、材质五维特征 c 上的取值 v。</p></div></div>
+      <div class="about-principle"><span class="num">02</span><div><strong>两阶段工作流</strong><p>弹球碰撞把边界命中转化为特征采样；随后以既有方案为基元，执行五类基本可拓变换并保留推导路径。</p></div></div>
+      <div class="about-principle"><span class="num">03</span><div><strong>路径留痕</strong><p>每个派生方案都有父节点、变换类型、旧值、新值、目的、理由与约束处理记录，供研究复盘与论文分析。</p></div></div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <span>良渚文化文创创新构思实验平台 · 可拓学研究原型</span>
+    <span class="footer-right" id="footerMeta">Local-first · Single HTML · 2026</span>
+  </footer>
+</div>
+
+<div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="false"></div>
+
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <header class="modal-head">
+      <div><h3 id="modalTitle">对话框</h3><p id="modalSubtitle"></p></div>
+      <button class="modal-close" type="button" id="modalCloseBtn" aria-label="关闭对话框">×</button>
+    </header>
+    <div class="modal-body" id="modalBody"></div>
+    <footer class="modal-actions" id="modalActions"></footer>
+  </div>
+</div>
+
+<script>'use strict';
+
+/* ============================================================
+   基础常量与默认数据
+   ============================================================ */
+const STORAGE_KEY = 'liangzhu-extension-prototype-v1';
+const APP_VERSION = 2;
+const DIMS = [
+  { key: 'theme',    label: '主题', short: '主', color: '#b24b3d' },
+  { key: 'carrier',  label: '载体', short: '载', color: '#3e7468' },
+  { key: 'pattern',  label: '纹样', short: '纹', color: '#98624c' },
+  { key: 'color',    label: '色彩', short: '色', color: '#a78345' },
+  { key: 'material', label: '材质', short: '材', color: '#6b6152' }
+];
+const DIM_MAP = Object.fromEntries(DIMS.map(d => [d.key, d]));
+const DEFAULT_KEYWORDS = {
+  theme: ['良渚神人兽面', '玉琮礼器', '玉鸟图腾', '水乡泽国', '祭祀礼俗', '黑陶文明'],
+  carrier: ['书签', '桌面摆件', '笔记本', '徽章', '帆布包', '香插'],
+  pattern: ['神人兽面纹', '鸟纹', '兽面简化纹', '螺旋纹', '云雷纹', '琮体几何纹'],
+  color: ['玉石青', '陶土褐', '黑陶墨色', '象牙白', '青铜绿', '砂金'],
+  material: ['竹木', '黄铜', '陶瓷', '树脂', '丝绸', '亚克力']
+};
+const TRANSFORM_TYPES = [
+  { key: 'replace', label: '置换变换', short: '置换', description: '将选定维度的旧特征值替换为词库中的新值。' },
+  { key: 'increase', label: '增加变换', short: '增加', description: '在原有特征上增加装饰、功能、配件或文化符号。' },
+  { key: 'delete', label: '删除变换', short: '删除', description: '移除、弱化或简化原有特征，而非只有完全删除。' },
+  { key: 'scale', label: '扩缩变换', short: '扩缩', description: '调整尺寸、比例、密度、色彩面积或视觉权重。' },
+  { key: 'combination', label: '组合变换', short: '组合', description: '融合两个维度特征，或融合两个已保存的完整方案。' }
+];
+const TRANSFORM_MAP = Object.fromEntries(TRANSFORM_TYPES.map(t => [t.key, t]));
+const CASE_LIBRARY = [
+  {
+    id: 'case-bookmark',
+    name: '案例 1 · 神人兽面纹竹木书签',
+    description: '以良渚神人兽面纹为核心视觉，借竹木的温润手感进入日常阅读场景。',
+    values: { theme: '良渚神人兽面', carrier: '书签', pattern: '神人兽面纹', color: '玉石青', material: '竹木' },
+    recommendations: [
+      { type: 'increase', dim: 'carrier', category: '配件', detail: '流苏挂饰', purpose: '增加礼器感与使用仪式感', reason: '书签体量较小，流苏可作为低干预的装饰配件，强化良渚礼玉的悬挂联想。' },
+      { type: 'scale', dim: 'pattern', op: '局部化', degree: 3, detail: '将神人兽面纹集中于书签上端，保留留白', purpose: '调整纹样视觉权重', reason: '书签尺幅有限，局部化有助于保持识别度并减少工艺拥挤。' },
+      { type: 'combination', dimA: 'carrier', dimB: 'pattern', fusion: '让纹样成为书签夹持结构的一部分', purpose: '融合载体结构与纹样语义', reason: '把纹样从表面装饰推进为结构线索，探索形式与功能的结合。' }
+    ]
+  },
+  {
+    id: 'case-cong',
+    name: '案例 2 · 玉琮形态陶瓷桌面摆件',
+    description: '提取玉琮的内圆外方与节律层带，以陶瓷桌面摆件重建礼器尺度感。',
+    values: { theme: '玉琮礼器', carrier: '桌面摆件', pattern: '琮体几何纹', color: '象牙白', material: '陶瓷' },
+    recommendations: [
+      { type: 'scale', dim: 'carrier', op: '放大', degree: 4, detail: '放大桌面摆件的纵向比例，强化礼器感', purpose: '强化陈列尺度与礼制联想', reason: '桌面摆件可通过纵向比例调整获得更强的纪念性。' },
+      { type: 'delete', dim: 'pattern', mode: '简化', detail: '保留琮体横向分层，弱化细碎纹样', purpose: '降低装饰密度', reason: '陶瓷成型与烧制中过密细节容易失真，简化可保留核心轮廓。' },
+      { type: 'replace', dim: 'color', purpose: '引入更明确的贵金属语义', reason: '砂金可作为局部边饰色彩，与象牙白形成礼器式对比。' }
+    ]
+  },
+  {
+    id: 'case-bird',
+    name: '案例 3 · 良渚玉鸟主题笔记本',
+    description: '将玉鸟图腾转译为笔记本封面的轻盈秩序，以丝绸触感连接佩戴与书写。',
+    values: { theme: '玉鸟图腾', carrier: '笔记本', pattern: '鸟纹', color: '黑陶墨色', material: '丝绸' },
+    recommendations: [
+      { type: 'combination', dimA: 'carrier', dimB: 'pattern', fusion: '将鸟纹组织为翻页方向的飞行轨迹', purpose: '让纹样参与使用动线', reason: '把鸟纹与翻页动作关联，可使视觉叙事进入使用过程。' },
+      { type: 'increase', dim: 'carrier', category: '配件', detail: '鸟形金属书签扣', purpose: '增加可识别的功能配件', reason: '书签扣兼具固定与纪念功能，适合与玉鸟主题形成呼应。' },
+      { type: 'replace', dim: 'material', purpose: '探索更耐用且可雕刻的载体', reason: '竹木可承载精细压纹，并降低丝绸在长期使用中的维护难度。' }
+    ]
+  }
+];
+const CULTURAL_CUES = ['良渚','玉琮','玉鸟','神人','兽面','鸟纹','琮','黑陶','陶','祭祀','水乡','云雷','螺旋','象牙','玉石','青铜','丝绸','竹木','礼器'];
+const MODERN_CUES = ['赛博','霓虹','镭射','塑料','机械','人工智能','AI','电子','太空','荧光'];
+const STAGE_LABELS = ['', '阶段一 · 发散生成', '阶段二 · 可拓变换'];
+
+function emptyValues() {
+  return Object.fromEntries(DIMS.map(d => [d.key, '']));
+}
+function emptyLocks() {
+  return Object.fromEntries(DIMS.map(d => [d.key, false]));
+}
+function createDefaultState() {
+  return {
+    version: APP_VERSION,
+    keywords: clone(DEFAULT_KEYWORDS),
+    schemes: [],
+    logs: [],
+    warnings: [],
+    rootId: null,
+    activeId: null,
+    stage: 1,
+    semiAutoEnabled: false,
+    draft: emptyValues(),
+    hitDims: [],
+    locks: emptyLocks(),
+    constraint: 40,
+    speed: 170,
+    selectedCompare: [],
+    caseId: null,
+    caseName: '',
+    caseRecommendations: [],
+    seq: { scheme: 0, log: 0, warning: 0 },
+    savedAt: null
+  };
+}
+
+let state = createDefaultState();
+let loadNotice = null;
+const ui = {
+  activeTreeTab: 'tree',
+  activeTransformTab: 'semi',
+  activeTransformType: 'replace',
+  comboMode: 'A',
+  editingKeyword: null,
+  openKeywordGroups: new Set(['theme', 'carrier', 'pattern', 'color', 'material']),
+  openingCases: false,
+  prefill: null,
+  modalOpen: false,
+  modalOnClose: null,
+  lastFocus: null,
+  lastAutoMessage: ''
+};
+let editBuffer = null;
+let editDirty = false;
+
+/* ============================================================
+   通用工具
+   ============================================================ */
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+function uid(prefix = 'id') {
+  const rand = (globalThis.crypto && typeof crypto.randomUUID === 'function')
+    ? crypto.randomUUID().replace(/-/g, '').slice(0, 10)
+    : Math.random().toString(36).slice(2, 12);
+  return `${prefix}-${Date.now().toString(36)}-${rand}`;
+}
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+function clamp(n, min, max) {
+  return Math.max(min, Math.min(max, n));
+}
+function pad2(n) {
+  return String(n).padStart(2, '0');
+}
+function formatDateTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+function formatTimeShort(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+function nowIso() {
+  return new Date().toISOString();
+}
+function safeText(value) {
+  return String(value ?? '').trim().replace(/\s+/g, ' ');
+}
+function valuesComplete(values) {
+  return DIMS.every(d => safeText(values && values[d.key]));
+}
+function activeScheme() {
+  return state.schemes.find(s => s.id === state.activeId) || null;
+}
+function rootScheme() {
+  return state.schemes.find(s => s.id === state.rootId) || null;
+}
+function schemeById(id) {
+  return state.schemes.find(s => s.id === id) || null;
+}
+function stageBand(value = state.constraint) {
+  if (value < 34) return 'low';
+  if (value < 68) return 'medium';
+  return 'high';
+}
+function constraintBandLabel(value = state.constraint) {
+  const band = stageBand(value);
+  return band === 'low' ? '低约束' : band === 'medium' ? '中约束' : '高约束';
+}
+function constraintDescription(value = state.constraint) {
+  const band = stageBand(value);
+  if (band === 'low') return '鼓励跨界发散，提示较少，几乎不拦截。';
+  if (band === 'medium') return '兼顾文化关联与工艺可行性，低关联方案会给出警告。';
+  return '严格提示文化冲突与工艺不合理，但用户仍可确认强制执行并留痕。';
+}
+function dimsText(dims) {
+  return (dims || []).map(k => DIM_MAP[k] ? DIM_MAP[k].label : k).join(' × ');
+}
+function typeLabel(key) {
+  return TRANSFORM_MAP[key]?.label || key || '初始';
+}
+function stripSchemeCodePrefix(value) {
+  return String(value || '').replace(/^\s*(?:R0|S\d{1,3})\s*[·:：-]\s*/i, '').trim();
+}
+function branchName(transform) {
+  const purpose = safeText(transform?.purpose);
+  if (purpose) return purpose.slice(0, 40);
+  return transform?.label || '变换分支';
+}
+
+function toast(message, type = 'info', duration = 3200) {
+  const region = document.getElementById('toastRegion');
+  if (!region) return;
+  while (region.children.length >= 3) region.firstElementChild.remove();
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const mark = type === 'success' ? '✓' : type === 'error' ? '!' : type === 'warning' ? '△' : 'i';
+  el.innerHTML = `<span class="toast-mark">${mark}</span><span>${esc(message)}</span>`;
+  region.appendChild(el);
+  window.setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(4px)';
+    el.style.transition = 'opacity .2s, transform .2s';
+    window.setTimeout(() => el.remove(), 220);
+  }, duration);
+}
+
+function downloadText(filename, text, mime = 'text/plain;charset=utf-8') {
+  try {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+    toast(`已导出：${filename}`, 'success');
+  } catch (err) {
+    console.error(err);
+    toast('导出失败，请检查浏览器下载权限。', 'error');
+  }
+}
+function fileStamp() {
+  const d = new Date();
+  return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}`;
+}
+function fileNameSafe(text) {
+  return String(text || '方案').replace(/[\\/:*?"<>|]/g, '_').slice(0, 44);
+}
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      if (!ok) throw new Error('execCommand copy failed');
+    }
+    toast('方案文本已复制。', 'success');
+  } catch (err) {
+    console.warn(err);
+    toast('复制失败，请手动选择文本复制。', 'error');
+  }
+}
+
+/* ============================================================
+   持久化
+   ============================================================ */
+function normalizeKeywords(raw) {
+  const result = {};
+  if (!raw || typeof raw !== 'object') throw new Error('缺少 keywords 对象。');
+  for (const dim of DIMS) {
+    if (!Array.isArray(raw[dim.key])) throw new Error(`关键词维度 ${dim.key} 必须是数组。`);
+    const seen = new Set();
+    const values = [];
+    for (const item of raw[dim.key]) {
+      if (typeof item !== 'string') throw new Error(`${dim.label}关键词必须为字符串。`);
+      const v = safeText(item);
+      if (!v) continue;
+      if (seen.has(v)) continue;
+      seen.add(v);
+      values.push(v);
+    }
+    if (!values.length) throw new Error(`${dim.label}至少需要保留 1 个关键词。`);
+    result[dim.key] = values;
+  }
+  return result;
+}
+
+function sanitizeState(input) {
+  if (!input || typeof input !== 'object') throw new Error('数据根对象无效。');
+  const base = createDefaultState();
+  const s = { ...base, ...input };
+  s.keywords = normalizeKeywords(input.keywords || base.keywords);
+  if (!Array.isArray(input.schemes)) throw new Error('schemes 必须是数组。');
+  const seenIds = new Set();
+  s.schemes = input.schemes.map((raw, idx) => {
+    if (!raw || typeof raw !== 'object') throw new Error(`第 ${idx + 1} 个方案节点无效。`);
+    if (typeof raw.id !== 'string' || !raw.id) throw new Error(`第 ${idx + 1} 个方案节点缺少 id。`);
+    if (seenIds.has(raw.id)) throw new Error(`方案 id 重复：${raw.id}`);
+    seenIds.add(raw.id);
+    const values = emptyValues();
+    for (const d of DIMS) {
+      if (typeof raw.values?.[d.key] !== 'string') throw new Error(`方案 ${raw.id} 缺少 ${d.label} 特征值。`);
+      values[d.key] = raw.values[d.key];
+    }
+    return {
+      id: raw.id,
+      parentId: typeof raw.parentId === 'string' ? raw.parentId : null,
+      no: Number.isFinite(raw.no) ? raw.no : idx,
+      name: (() => {
+        const rawName = typeof raw.name === 'string' && raw.name ? raw.name : '方案 ' + (idx + 1);
+        const cleaned = stripSchemeCodePrefix(rawName) || ('方案 ' + (idx + 1));
+        return raw.transform && cleaned === (raw.transform.label || '') ? branchName(raw.transform) : cleaned;
+      })(),
+      values,
+      origin: raw.origin || (raw.parentId ? 'transform' : 'initial'),
+      transform: raw.transform && typeof raw.transform === 'object' ? raw.transform : null,
+      mark: ['excellent', 'optimize'].includes(raw.mark) ? raw.mark : null,
+      createdAt: raw.createdAt || nowIso()
+    };
+  });
+  s.schemes.forEach(scheme => {
+    if (scheme.parentId && !seenIds.has(scheme.parentId)) throw new Error(`方案 ${scheme.id} 的父节点不存在。`);
+    if (scheme.parentId === scheme.id) throw new Error(`方案 ${scheme.id} 不能以自身为父节点。`);
+  });
+  s.rootId = typeof input.rootId === 'string' && seenIds.has(input.rootId) ? input.rootId : (s.schemes.find(x => !x.parentId)?.id || null);
+  s.activeId = typeof input.activeId === 'string' && seenIds.has(input.activeId) ? input.activeId : s.rootId;
+  s.stage = s.schemes.length ? 2 : 1;
+  s.semiAutoEnabled = Boolean(input.semiAutoEnabled);
+  s.draft = { ...emptyValues(), ...(input.draft || {}) };
+  s.hitDims = Array.isArray(input.hitDims) ? input.hitDims.filter(k => DIM_MAP[k]) : [];
+  s.locks = { ...emptyLocks(), ...(input.locks || {}) };
+  s.constraint = clamp(Number(input.constraint) || 40, 0, 100);
+  s.speed = clamp(Number(input.speed) || 170, 80, 280);
+  s.selectedCompare = Array.isArray(input.selectedCompare)
+    ? [...new Set(input.selectedCompare.filter(id => seenIds.has(id)))].slice(0, 2) : [];
+  s.caseId = typeof input.caseId === 'string' ? input.caseId : null;
+  s.caseName = typeof input.caseName === 'string' ? input.caseName : '';
+  s.caseRecommendations = Array.isArray(input.caseRecommendations) ? input.caseRecommendations : [];
+  s.logs = Array.isArray(input.logs) ? input.logs.filter(l => l && typeof l === 'object') : [];
+  s.warnings = Array.isArray(input.warnings) ? input.warnings.filter(w => w && typeof w === 'object') : [];
+  const maxSchemeNo = s.schemes.reduce((m, x) => Math.max(m, Number(x.no) || 0), 0);
+  const maxLogNo = s.logs.reduce((m, x) => Math.max(m, Number(x.seq) || 0), 0);
+  const maxWarnNo = s.warnings.reduce((m, x) => Math.max(m, Number(x.seq) || 0), 0);
+  s.seq = {
+    scheme: Math.max(Number(input.seq?.scheme) || 0, maxSchemeNo),
+    log: Math.max(Number(input.seq?.log) || 0, maxLogNo),
+    warning: Math.max(Number(input.seq?.warning) || 0, maxWarnNo)
+  };
+  if (!s.schemes.length) {
+    s.rootId = null;
+    s.activeId = null;
+    s.stage = 1;
+  }
+  return s;
+}
+
+function loadState() {
+  let raw = null;
+  try {
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch (err) {
+    console.warn(err);
+    loadNotice = { type: 'warning', text: '浏览器禁止访问 localStorage，本次修改可能无法持久保存。' };
+    return;
+  }
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    state = sanitizeState(parsed);
+    state.savedAt = parsed.savedAt || null;
+  } catch (err) {
+    console.warn('读取本地数据失败：', err);
+    loadNotice = { type: 'error', text: '本地数据格式异常，已载入默认工作区。原字符串仍保留在 localStorage 中。' };
+  }
+}
+
+let saveTimer = null;
+function saveState(immediate = false) {
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+    saveTimer = null;
+  }
+  const run = () => {
+    try {
+      state.savedAt = nowIso();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      const note = document.getElementById('saveStatus');
+      if (note) note.textContent = `已自动保存 · ${formatTimeShort(state.savedAt)}`;
+    } catch (err) {
+      console.warn('保存失败：', err);
+      toast('本地保存失败，可能超出浏览器存储配额。', 'error');
+    }
+  };
+  if (immediate) run();
+  else saveTimer = window.setTimeout(run, 120);
+}
+/* ============================================================
+   规则化辅助评价
+   ============================================================ */
+function scoreTone(score) {
+  if (score >= 68) return '';
+  if (score >= 45) return 'warn';
+  return 'bad';
+}
+function scoreLabel(score) {
+  if (score >= 68) return '较有线索';
+  if (score >= 45) return '需复核';
+  return '提示较强';
+}
+function uniqueList(list) {
+  return [...new Set(list.filter(Boolean))];
+}
+function evaluateScheme(scheme) {
+  if (!scheme || !scheme.values) {
+    return {
+      cultural: 0, feasibility: 0, innovation: 0, conflicts: ['尚无方案可供评价。'],
+      culturalText: '尚未生成方案。', feasibilityText: '尚未生成方案。', innovationText: '尚未生成方案。'
+    };
+  }
+  const v = scheme.values;
+  const transform = scheme.transform || null;
+  const type = transform?.type || 'initial';
+  let cultural = 48;
+  let feasibility = 82;
+  let innovation = scheme.parentId ? 32 : 26;
+  const conflicts = [];
+
+  for (const dim of DIMS) {
+    const value = safeText(v[dim.key]);
+    if (!value) {
+      cultural -= 10;
+      feasibility -= 9;
+      conflicts.push(`${dim.label}特征值为空，无法形成完整物元。`);
+      continue;
+    }
+    const hasCue = CULTURAL_CUES.some(cue => value.includes(cue));
+    if (hasCue) cultural += 6;
+    else cultural -= 1;
+    if ((DEFAULT_KEYWORDS[dim.key] || []).includes(value)) cultural += 2;
+    if (MODERN_CUES.some(cue => value.toUpperCase().includes(cue.toUpperCase()))) {
+      cultural -= 15;
+      conflicts.push(`${dim.label}中的“${value}”带有明显非良渚语境的现代/工业意象。`);
+    }
+    if (value.length > 38) feasibility -= 5;
+    if (value.length > 64) feasibility -= 6;
+    if (value.includes('无（已移除') || value === '无') {
+      feasibility -= 4;
+      if (dim.key === 'theme') {
+        cultural -= 18;
+        conflicts.push('主题被移除或弱化，文化叙事线索显著减弱。');
+      }
+      if (dim.key === 'material' || dim.key === 'carrier') {
+        feasibility -= 16;
+        conflicts.push(`${dim.label}被移除后，物元的实体可行性需要重新定义。`);
+      }
+    }
+  }
+
+  const material = v.material || '';
+  const carrier = v.carrier || '';
+  const pattern = v.pattern || '';
+  const theme = v.theme || '';
+
+  if (/丝绸/.test(material) && /香插/.test(carrier)) {
+    feasibility -= 31;
+    conflicts.push('丝绸与香插存在耐热、防火与清洗工艺冲突。');
+  }
+  if (/树脂/.test(material) && /香插/.test(carrier)) {
+    feasibility -= 19;
+    conflicts.push('树脂香插需要评估受热形变与气味释放风险。');
+  }
+  if (/亚克力/.test(material) && /香插/.test(carrier)) {
+    feasibility -= 12;
+    conflicts.push('亚克力香插需复核受热稳定性。');
+  }
+  if (/陶瓷/.test(material) && /帆布包/.test(carrier)) {
+    feasibility -= 24;
+    conflicts.push('陶瓷与软质帆布包的结构结合需要额外固定与缓冲方案。');
+  }
+  if (/陶瓷/.test(material) && /书签/.test(carrier)) {
+    feasibility -= 17;
+    conflicts.push('陶瓷书签较薄时存在脆断风险，需重新设计厚度与包装。');
+  }
+  if (/竹木/.test(material) && /香插/.test(carrier)) feasibility += 5;
+  if (/黄铜/.test(material) && /书签/.test(carrier)) feasibility += 3;
+  if (/密集化|高密度/.test(pattern) && /书签|徽章/.test(carrier)) {
+    feasibility -= 8;
+    conflicts.push('小尺度载体承载高密度纹样时，雕刻/印刷精度与识别度需复核。');
+  }
+  if (/已移除/.test(pattern) && /神人兽面|玉鸟|琮/.test(theme)) {
+    cultural -= 5;
+    conflicts.push('核心文化主题仍在，但主要纹样被移除，视觉识别链条可能断裂。');
+  }
+
+  if (type === 'combination') {
+    cultural += 4;
+    feasibility -= 3;
+    innovation += 17;
+  } else if (type === 'increase') {
+    feasibility -= 4;
+    innovation += 12;
+  } else if (type === 'delete') {
+    cultural -= 4;
+    innovation += 11;
+  } else if (type === 'scale') {
+    innovation += 10;
+  } else if (type === 'replace') {
+    innovation += 13;
+  } else if (type === 'manual-edit') {
+    innovation += 8;
+  }
+
+  if (transform?.targetDims) {
+    const changed = transform.targetDims.filter(k => {
+      const oldV = transform.oldValues?.[k];
+      const newV = transform.newValues?.[k];
+      return oldV !== newV;
+    });
+    innovation += changed.length * 7;
+    if (changed.length >= 2) innovation += 4;
+  }
+  const totalChars = DIMS.reduce((n, d) => n + safeText(v[d.key]).length, 0);
+  if (totalChars > 100) innovation += 5;
+  if (conflicts.length) innovation += Math.min(5, conflicts.length * 2);
+
+  cultural = Math.round(clamp(cultural, 8, 97));
+  feasibility = Math.round(clamp(feasibility, 8, 97));
+  innovation = Math.round(clamp(innovation, 0, 98));
+
+  const culturalText = cultural >= 68
+    ? '与良渚语料及既有特征保持较强语义联系。'
+    : cultural >= 45
+      ? '保留了部分良渚语义，但新增表达仍需资料核验。'
+      : '当前文化关联线索较弱，建议回到考古与馆藏资料复核。';
+  const feasibilityText = feasibility >= 68
+    ? '按简化工艺规则未发现明显障碍，仍需打样验证。'
+    : feasibility >= 45
+      ? '存在需进一步评估的结构、材料或加工问题。'
+      : '简化规则识别到较明显工艺风险。';
+  const innovationText = innovation >= 68
+    ? '特征组合跨度较大，具备进一步比较的探索价值。'
+    : innovation >= 45
+      ? '有一定特征变化，建议与父方案对照判断增益。'
+      : '变化幅度有限，可继续执行分化性更强的变换。';
+
+  return {
+    cultural, feasibility, innovation,
+    conflicts: uniqueList(conflicts),
+    culturalText, feasibilityText, innovationText,
+    combinedText: `文化关联性 ${cultural}/100；工艺可行性 ${feasibility}/100；创新跨度 ${innovation}/100。以上均为规则化辅助提示。`
+  };
+}
+
+function assessConstraintWarning(evalResult) {
+  const level = state.constraint;
+  const band = stageBand(level);
+  const reasons = [];
+  if (band === 'low') {
+    if (evalResult.cultural < 25) reasons.push(`文化关联提示指数仅 ${evalResult.cultural}/100，低于低约束档的极端提示阈值。`);
+    if (evalResult.feasibility < 25) reasons.push(`工艺可行性提示指数仅 ${evalResult.feasibility}/100，低于低约束档的极端提示阈值。`);
+  } else if (band === 'medium') {
+    if (evalResult.cultural < 45) reasons.push(`文化关联提示指数 ${evalResult.cultural}/100，低于中约束提示阈值。`);
+    if (evalResult.feasibility < 45) reasons.push(`工艺可行性提示指数 ${evalResult.feasibility}/100，低于中约束提示阈值。`);
+    if (evalResult.conflicts.length) reasons.push(`内置规则触发 ${evalResult.conflicts.length} 条矛盾或风险提示。`);
+  } else {
+    if (evalResult.cultural < 65) reasons.push(`文化关联提示指数 ${evalResult.cultural}/100，未达到高约束提示阈值。`);
+    if (evalResult.feasibility < 62) reasons.push(`工艺可行性提示指数 ${evalResult.feasibility}/100，未达到高约束提示阈值。`);
+    if (evalResult.conflicts.length) reasons.push(`高约束档对 ${evalResult.conflicts.length} 条矛盾/风险线索给出提示。`);
+  }
+  return {
+    trigger: reasons.length > 0,
+    level,
+    band,
+    reason: reasons.join(' ')
+  };
+}
+
+/* ============================================================
+   方案构造、变换提交与留痕
+   ============================================================ */
+function makeCandidate(parentScheme, values, meta) {
+  if (!parentScheme) throw new Error('缺少父方案。');
+  const oldValues = clone(parentScheme.values);
+  const newValues = { ...oldValues, ...values };
+  return {
+    parentId: parentScheme.id,
+    baseValues: oldValues,
+    values: newValues,
+    transform: {
+      type: meta.type,
+      label: meta.label || typeLabel(meta.type),
+      targetDims: meta.targetDims || [],
+      oldValues,
+      newValues,
+      purpose: safeText(meta.purpose),
+      reason: safeText(meta.reason),
+      mode: meta.mode || 'manual',
+      detail: meta.detail || '',
+      sourceSchemeId: meta.sourceSchemeId || null,
+      sourceSchemeName: meta.sourceSchemeName || '',
+      warningIgnored: false,
+      warningSnapshot: null
+    }
+  };
+}
+
+function makeTempScheme(candidate) {
+  return {
+    id: 'temp-eval',
+    parentId: candidate.parentId,
+    values: candidate.values,
+    transform: candidate.transform,
+    origin: 'transform'
+  };
+}
+
+function commitCandidate(candidate, evalResult, warningSnapshot = null) {
+  const parent = schemeById(candidate.parentId);
+  if (!parent) {
+    toast('父方案不存在，无法生成子方案。', 'error');
+    return null;
+  }
+  state.seq.scheme += 1;
+  const no = state.seq.scheme;
+  const scheme = {
+    id: uid('scheme'),
+    parentId: parent.id,
+    no,
+    name: branchName(candidate.transform),
+    values: { ...candidate.values },
+    origin: candidate.transform.mode === 'manual-edit' ? 'manual-edit' : 'transform',
+    transform: {
+      ...candidate.transform,
+      warningIgnored: Boolean(candidate.transform.warningIgnored),
+      warningSnapshot
+    },
+    mark: null,
+    createdAt: nowIso()
+  };
+  state.schemes.push(scheme);
+  state.activeId = scheme.id;
+  state.stage = 2;
+  state.draft = { ...scheme.values };
+  state.hitDims = uniqueList([...state.hitDims, ...(candidate.transform.targetDims || [])]);
+  editBuffer = { ...scheme.values };
+  editDirty = false;
+
+  state.seq.log += 1;
+  const log = {
+    id: uid('log'),
+    seq: state.seq.log,
+    at: scheme.createdAt,
+    schemeId: scheme.id,
+    schemeNo: scheme.no,
+    parentId: parent.id,
+    parentNo: parent.no,
+    type: candidate.transform.type,
+    typeLabel: candidate.transform.label,
+    targetDims: [...candidate.transform.targetDims],
+    oldValues: clone(candidate.transform.oldValues),
+    newValues: clone(candidate.transform.newValues),
+    purpose: candidate.transform.purpose,
+    reason: candidate.transform.reason,
+    mode: candidate.transform.mode,
+    detail: candidate.transform.detail,
+    sourceSchemeId: candidate.transform.sourceSchemeId || null,
+    warningIgnored: Boolean(candidate.transform.warningIgnored),
+    warningSnapshot,
+    evaluation: evalResult
+  };
+  state.logs.push(log);
+  saveState();
+  renderAll();
+  return scheme;
+}
+
+function recordWarningDecision(decision, candidate, evalResult, assessment) {
+  state.seq.warning += 1;
+  state.warnings.push({
+    id: uid('warning'),
+    seq: state.seq.warning,
+    at: nowIso(),
+    decision,
+    type: candidate.transform.type,
+    typeLabel: candidate.transform.label,
+    targetDims: [...candidate.transform.targetDims],
+    oldValues: clone(candidate.transform.oldValues),
+    newValues: clone(candidate.transform.newValues),
+    purpose: candidate.transform.purpose,
+    reason: candidate.transform.reason,
+    constraint: state.constraint,
+    band: assessment.band,
+    warningReason: assessment.reason,
+    evaluation: {
+      cultural: evalResult.cultural,
+      feasibility: evalResult.feasibility,
+      innovation: evalResult.innovation,
+      conflicts: [...evalResult.conflicts]
+    }
+  });
+  saveState();
+}
+
+function applyCandidate(candidate, options = {}) {
+  const evalResult = evaluateScheme(makeTempScheme(candidate));
+  const assessment = assessConstraintWarning(evalResult);
+  const proceed = () => {
+    candidate.transform.warningIgnored = assessment.trigger ? true : false;
+    const snapshot = assessment.trigger ? {
+      level: state.constraint,
+      band: assessment.band,
+      reason: assessment.reason,
+      evaluation: {
+        cultural: evalResult.cultural,
+        feasibility: evalResult.feasibility,
+        innovation: evalResult.innovation,
+        conflicts: [...evalResult.conflicts]
+      }
+    } : null;
+    if (assessment.trigger) recordWarningDecision('confirm', candidate, evalResult, assessment);
+    const scheme = commitCandidate(candidate, evalResult, snapshot);
+    if (scheme) {
+      toast(`已生成子方案 S${pad2(scheme.no)} · ${candidate.transform.label}${assessment.trigger ? '（已记录忽略警告）' : ''}`, 'success', 3800);
+      if (typeof options.onCommitted === 'function') options.onCommitted(scheme);
+    }
+  };
+  const cancel = () => {
+    if (assessment.trigger) recordWarningDecision('cancel', candidate, evalResult, assessment);
+    toast('已取消本次变换，未生成子方案。', 'info');
+    if (typeof options.onCancelled === 'function') options.onCancelled();
+  };
+  if (assessment.trigger) {
+    showWarningModal(candidate, evalResult, assessment, proceed, cancel);
+  } else {
+    proceed();
+  }
+}
+
+function createRootScheme(values, options = {}) {
+  const root = {
+    id: uid('root'),
+    parentId: null,
+    no: 0,
+    name: stripSchemeCodePrefix(options.name || '初始物元'),
+    values: { ...values },
+    origin: options.origin || 'initial',
+    transform: null,
+    mark: null,
+    createdAt: nowIso()
+  };
+  state.schemes = [root];
+  state.logs = [];
+  state.warnings = [];
+  state.rootId = root.id;
+  state.activeId = root.id;
+  state.stage = 2;
+  state.semiAutoEnabled = true;
+  state.draft = { ...values };
+  state.hitDims = DIMS.map(d => d.key);
+  state.selectedCompare = [];
+  state.seq = { scheme: 0, log: 0, warning: 0 };
+  editBuffer = { ...values };
+  editDirty = false;
+  saveState();
+  renderAll();
+  return root;
+}
+/* ============================================================
+   渲染
+   ============================================================ */
+function renderAll() {
+  if (editBuffer && activeScheme()) {
+    if (!editDirty) editBuffer = { ...activeScheme().values };
+  }
+  renderWorkflow();
+  renderExplorePanel();
+  renderKeywords();
+  renderSchemePanel();
+  renderTreePanel();
+}
+
+function renderWorkflow() {
+  const s1 = document.getElementById('workflowStage1');
+  const s2 = document.getElementById('workflowStage2');
+  if (!s1 || !s2) return;
+  s1.classList.toggle('active', state.stage === 1);
+  s1.classList.toggle('done', state.stage === 2);
+  s2.classList.toggle('active', state.stage === 2);
+  const badge = document.getElementById('activeSchemeBadge');
+  if (badge) {
+    const active = activeScheme();
+    badge.className = active ? 'status-pill' : 'status-pill muted';
+    badge.innerHTML = active
+      ? `<span class="status-dot"></span>当前起点 ${schemeCode(active)}`
+      : '尚未生成方案';
+  }
+  const treeCount = document.getElementById('treeNodeCount');
+  if (treeCount) treeCount.textContent = `${state.schemes.length} 个节点`;
+  document.getElementById('treeTabCount').textContent = state.schemes.length;
+  document.getElementById('compareTabCount').textContent = `${state.selectedCompare.length}/2`;
+  document.getElementById('logTabCount').textContent = state.logs.length;
+}
+
+function renderExplorePanel() {
+  const badge = document.getElementById('ballModeBadge');
+  if (badge) {
+    badge.innerHTML = state.stage === 1
+      ? '<span class="status-dot"></span>阶段一 · 发散模式'
+      : `<span class="status-dot"></span>阶段二 · ${state.semiAutoEnabled ? '半自动变换' : '弹球观测'}`;
+  }
+  const divBtn = document.getElementById('modeDivergenceBtn');
+  const semiBtn = document.getElementById('modeSemiBtn');
+  if (divBtn) divBtn.classList.toggle('active', state.stage === 1);
+  if (semiBtn) {
+    semiBtn.classList.toggle('active', state.stage === 2);
+    semiBtn.disabled = state.stage === 1;
+    semiBtn.title = state.stage === 1 ? '集齐五维初始方案后可开启' : '弹球碰撞将生成变换子方案';
+  }
+  const stats = ball.stats;
+  const cc = document.getElementById('collisionCount');
+  const vc = document.getElementById('vertexCount');
+  const tc = document.getElementById('transformTriggerCount');
+  if (cc) cc.textContent = stats.collisions;
+  if (vc) vc.textContent = stats.vertices;
+  if (tc) tc.textContent = stats.triggers;
+  const speedSlider = document.getElementById('speedSlider');
+  const speedValue = document.getElementById('speedValue');
+  if (speedSlider && document.activeElement !== speedSlider) speedSlider.value = state.speed;
+  if (speedValue) speedValue.textContent = `${state.speed} px/s`;
+  const canvasHint = document.getElementById('canvasModeHint');
+  if (canvasHint) canvasHint.textContent = state.stage === 1 ? 'STAGE 1 / DIVERGE' : (state.semiAutoEnabled ? 'STAGE 2 / AUTO-EXTEND' : 'STAGE 2 / OBSERVE');
+
+  const availableValues = state.stage === 1 ? state.draft : (activeScheme()?.values || emptyValues());
+  const locks = document.getElementById('dimensionLocks');
+  if (locks) {
+    locks.innerHTML = DIMS.map(d => {
+      const has = Boolean(safeText(availableValues[d.key]));
+      const checked = state.locks[d.key] ? 'checked' : '';
+      return `<label class="lock-chip"><input type="checkbox" data-lock="${d.key}" ${checked} ${has ? '' : 'disabled'}> ${d.label}</label>`;
+    }).join('');
+  }
+  const lockHint = document.getElementById('lockHint');
+  if (lockHint) lockHint.textContent = state.stage === 2 ? '半自动触发时跳过已锁定维度' : '初始方案集齐后生效';
+
+  const hitStrip = document.getElementById('hitStrip');
+  if (hitStrip) {
+    const displayValues = state.stage === 1 ? state.draft : (activeScheme()?.values || emptyValues());
+    hitStrip.innerHTML = `<span>命中维度</span>` + DIMS.map(d => {
+      const hit = state.hitDims.includes(d.key) || Boolean(safeText(displayValues[d.key]));
+      const shortVal = safeText(displayValues[d.key]).slice(0, 14);
+      return `<span class="hit-tag ${hit ? 'hit' : ''}">${d.label}${hit && shortVal ? ` · ${esc(shortVal)}` : ''}</span>`;
+    }).join('');
+  }
+
+  const start = document.getElementById('startBallBtn');
+  const pause = document.getElementById('pauseBallBtn');
+  if (start) {
+    start.disabled = ball.running;
+    start.textContent = ball.running ? '弹射中' : '开始弹射';
+  }
+  if (pause) pause.disabled = !ball.running;
+  const status = document.getElementById('ballStatusText');
+  if (status) {
+    if (state.stage === 1) {
+      const n = DIMS.filter(d => safeText(state.draft[d.key])).length;
+      status.innerHTML = ball.running
+        ? `<strong>发散采样中</strong> · 已获得 ${n}/5 个维度；碰撞边界采样关键词`
+        : `<strong>${n ? '暂停 / 等待继续' : '等待开始'}</strong> · 五边形内部真实线段碰撞，集齐 5 维生成初始方案`;
+    } else if (!state.semiAutoEnabled) {
+      status.innerHTML = '<strong>弹球观测</strong> · 变换触发已关闭；可在“手动受控变换”中执行受控变换';
+    } else if (ball.running) {
+      status.innerHTML = '<strong>半自动变换触发中</strong> · 撞边=置换，撞顶点=组合，内部飞行定时触发增/删/扩缩';
+    } else {
+      status.innerHTML = '<strong>等待弹射</strong> · 当前方案作为基元；碰撞将自动生成可追溯子方案';
+    }
+  }
+}
+
+function renderKeywords() {
+  const wrap = document.getElementById('keywordGroups');
+  if (!wrap) return;
+  const all = DIMS.reduce((n, d) => n + state.keywords[d.key].length, 0);
+  const totalEl = document.getElementById('keywordTotal');
+  if (totalEl) totalEl.textContent = `${all} 个词`;
+  wrap.innerHTML = DIMS.map(d => {
+    const open = ui.openKeywordGroups.has(d.key);
+    const editing = ui.editingKeyword && ui.editingKeyword.dim === d.key ? ui.editingKeyword : null;
+    const items = state.keywords[d.key].map((kw, idx) => {
+      if (editing && editing.index === idx) {
+        return `<span class="kw-item"><input id="kwEditInput" type="text" value="${esc(kw)}" aria-label="修改关键词"><button class="icon-btn" type="button" data-kw-save="${d.key}:${idx}" title="保存">✓</button><button class="icon-btn" type="button" data-kw-cancel="${d.key}:${idx}" title="取消">×</button></span>`;
+      }
+      return `<span class="kw-item"><span title="${esc(kw)}">${esc(kw)}</span><button class="icon-btn" type="button" data-kw-edit="${d.key}:${idx}" aria-label="修改 ${esc(kw)}">✎</button><button class="icon-btn" type="button" data-kw-delete="${d.key}:${idx}" aria-label="删除 ${esc(kw)}">×</button></span>`;
+    }).join('');
+    return `
+      <div class="kw-group ${open ? 'open' : ''}" data-kw-group="${d.key}">
+        <button class="kw-head" type="button" data-kw-toggle="${d.key}" aria-expanded="${open}">
+          <span class="kw-dot ${d.key}"></span><span>${d.label}</span>
+          <span class="kw-count">${state.keywords[d.key].length}</span><span class="kw-caret">›</span>
+        </button>
+        <div class="kw-body">
+          <div class="kw-chips">${items || '<span class="kw-note">暂无关键词</span>'}</div>
+          <div class="kw-add">
+            <input type="text" data-kw-add-input="${d.key}" placeholder="新增${d.label}关键词" aria-label="新增${d.label}关键词">
+            <button class="btn btn-sm" type="button" data-kw-add="${d.key}">添加</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  if (ui.editingKeyword) {
+    const input = document.getElementById('kwEditInput');
+    if (input) {
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
+  }
+}
+function rangeBackground(value, min, max) {
+  const pct = ((value - min) / (max - min)) * 100;
+  return `linear-gradient(90deg, var(--jade) 0%, var(--jade) ${pct}%, var(--line) ${pct}%, var(--line) 100%)`;
+}
+
+function renderSchemePanel() {
+  const wrap = document.getElementById('schemeContent');
+  if (!wrap) return;
+  const active = activeScheme();
+  if (!active) {
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-mark">R = (N, c, v)</div>
+        <h3>尚未生成初始物元</h3>
+        <p>在弹球探索区开始发散，集齐主题、载体、纹样、色彩、材质五个特征值后，将自动生成初始方案；也可以载入内置良渚案例作为研究起点。</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:12px">
+          <button class="btn btn-primary btn-sm" type="button" data-action="focus-explore">前往弹球发散</button>
+          <button class="btn btn-sm" type="button" data-action="open-cases">载入良渚案例</button>
+        </div>
+      </div>`;
+    return;
+  }
+  if (!editBuffer || !editDirty) editBuffer = { ...active.values };
+  const evalResult = evaluateScheme(active);
+  const isRoot = active.id === state.rootId;
+  const typeBadge = active.transform
+    ? `<span class="badge-type ${active.transform.type === 'combination' ? 'combo' : active.transform.mode === 'manual-edit' ? 'manual' : ''}">${esc(active.transform.label || typeLabel(active.transform.type))}</span>`
+    : `<span class="badge-type root">初始方案</span>`;
+  const values = editBuffer;
+  const evalCard = (label, score, explain) => `
+    <div class="eval-card">
+      <div class="eval-head"><span>${label}</span><span>${scoreLabel(score)}</span></div>
+      <div class="eval-score ${scoreTone(score)}">${score}<small style="font-size:8px;color:var(--ink-faint);font-weight:400"> /100</small></div>
+      <div class="eval-bar"><i class="${scoreTone(score)}" style="width:${score}%"></i></div>
+      <div class="eval-explain">${esc(explain)}</div>
+    </div>`;
+  const conflicts = evalResult.conflicts.length
+    ? `<div class="eval-conflict"><strong>矛盾冲突提示（${evalResult.conflicts.length}）</strong>：${evalResult.conflicts.map(esc).join('；')}</div>`
+    : `<div class="eval-conflict" style="border-color:rgba(62,116,104,.18);background:rgba(228,238,233,.28);color:var(--jade-deep)"><strong>矛盾冲突提示：</strong>未触发内置规则，不等于真实方案不存在冲突。</div>`;
+  const dirty = editDirty ? `<span class="dirty-note">有未保存的手动修订</span>` : '';
+  const markBadge = active.mark === 'excellent'
+    ? '<span class="tree-mark excellent">优秀方案</span>'
+    : active.mark === 'optimize' ? '<span class="tree-mark optimize">待优化方案</span>' : '';
+
+  wrap.innerHTML = `
+    <div class="scheme-topbar">
+      <div class="scheme-id">${typeBadge}<strong>${isRoot ? 'R0' : `S${pad2(active.no)}`}</strong><span>${esc(active.name)}</span>${markBadge}</div>
+      <div class="scheme-stage">${dirty}<span class="chip chip-jade">${state.stage === 2 ? '可变换基元' : '初始方案'}</span></div>
+    </div>
+    <div class="formula-card"><div class="formula-main"><span class="r">R</span> = ( <span class="n">文创产品</span>, { ${DIMS.map(d => `${d.label}: <strong>${esc(values[d.key] || '—')}</strong>`).join('，')} } )</div></div>
+    <div class="dim-table">
+      ${DIMS.map(d => `
+        <div class="dim-row ${editDirty && active.values[d.key] !== values[d.key] ? 'edited' : ''}">
+          <span class="dim-name">${d.label}</span>
+          <input type="text" value="${esc(values[d.key] || '')}" data-edit-dim="${d.key}" aria-label="${d.label}特征值" ${state.locks[d.key] ? 'disabled' : ''}>
+          <label class="lock-mini" title="锁定后弹球半自动变换会跳过该维度"><input type="checkbox" data-lock="${d.key}" ${state.locks[d.key] ? 'checked' : ''}>锁定</label>
+        </div>`).join('')}
+    </div>
+    <p class="eval-disclaimer">规则化辅助指数基于关键词线索、内置工艺冲突规则与特征变化幅度生成，不是客观文化评分。</p>
+    <div class="eval-grid">
+      ${evalCard('文化关联性', evalResult.cultural, evalResult.culturalText)}
+      ${evalCard('工艺可行性', evalResult.feasibility, evalResult.feasibilityText)}
+      ${evalCard('创新跨度', evalResult.innovation, evalResult.innovationText)}
+      ${conflicts}
+    </div>
+    <div class="scheme-actions">
+      <button class="btn btn-sm ${editDirty ? 'btn-primary' : ''}" type="button" data-action="save-scheme">${editDirty ? '保存修订为子方案' : '保存当前方案'}</button>
+      <button class="btn btn-sm" type="button" data-action="copy-scheme">复制文本</button>
+      <button class="btn btn-sm" type="button" data-action="export-scheme-json">导出方案 JSON</button>
+      <button class="btn btn-sm" type="button" data-action="export-scheme-md">导出方案 MD</button>
+      <button class="btn btn-sm btn-clay" type="button" data-action="goto-transform">进入可拓变换</button>
+    </div>
+    <div class="scheme-section-title">可拓变换工作台 <span class="badge">从当前节点生成子方案</span></div>
+    <div class="transform-box" id="transformWorkspace">
+      <div class="transform-tabs" role="tablist" aria-label="变换路径">
+        <button type="button" data-transform-tab="semi" class="${ui.activeTransformTab === 'semi' ? 'active' : ''}" role="tab" aria-selected="${ui.activeTransformTab === 'semi'}">半自动弹球触发</button>
+        <button type="button" data-transform-tab="manual" class="${ui.activeTransformTab === 'manual' ? 'active' : ''}" role="tab" aria-selected="${ui.activeTransformTab === 'manual'}">手动受控变换</button>
+      </div>
+      <div class="transform-content">
+        <div class="constraint-card">
+          <div class="constraint-head"><label for="constraintSlider">构思约束强度</label><span class="constraint-level" id="constraintLevel">${constraintBandLabel()} · ${state.constraint}</span></div>
+          <input type="range" id="constraintSlider" min="0" max="100" step="1" value="${state.constraint}" style="background:${rangeBackground(state.constraint, 0, 100)}" aria-label="构思约束强度">
+          <p class="constraint-explain" id="constraintExplain">${esc(constraintDescription())}</p>
+        </div>
+        <div id="transformContentBody">${renderTransformContent(active, evalResult)}</div>
+      </div>
+    </div>`;
+  afterSchemeRender(active);
+}
+
+function selectedAttr(value, current) {
+  return String(value) === String(current) ? 'selected' : '';
+}
+
+function renderRecommendations() {
+  if (!state.caseRecommendations.length) {
+    return `<p class="auto-card p" style="margin-top:7px;color:var(--ink-faint);font-size:9.5px">当前未加载案例推荐。半自动路径会按弹球事件类型随机选择可用变换。</p>`;
+  }
+  return `<div class="recommend-list">
+    <div class="preview-title">案例推荐变换示例</div>
+    ${state.caseRecommendations.map((rec, idx) => {
+      const type = TRANSFORM_MAP[rec.type];
+      const dimText = rec.dim ? DIM_MAP[rec.dim]?.label : rec.dimA ? `${DIM_MAP[rec.dimA]?.label} × ${DIM_MAP[rec.dimB]?.label}` : '多维度';
+      return `<div class="recommend-item">
+        <div class="rec-copy"><strong>${esc(type?.label || rec.type)} · ${esc(dimText)}</strong><span>${esc(rec.purpose || '')}${rec.detail ? `｜${esc(rec.detail)}` : ''}</span></div>
+        <button class="btn btn-xs" type="button" data-rec-load="${idx}">载入手动面板</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderTransformContent(active) {
+  if (ui.activeTransformTab === 'semi') {
+    const locked = DIMS.filter(d => state.locks[d.key]).map(d => d.label);
+    return `
+      <div class="auto-card" style="margin-top:10px">
+        <div class="auto-card-head">
+          <h4>半自动弹球触发</h4>
+          <span class="chip ${state.semiAutoEnabled ? 'chip-jade' : ''}">${state.semiAutoEnabled ? '触发已启用' : '触发已关闭'}</span>
+        </div>
+        <p>点击上方“开始弹射”后：撞边触发置换，撞顶点触发相邻维度的组合，内部飞行按间隔随机触发增加、删除、扩缩。弹球事件基于当前起点方案生成新子方案，锁定维度会被跳过。</p>
+        <div class="auto-status-grid">
+          <div class="auto-stat"><strong>${DIMS.filter(d => state.locks[d.key]).length}/5</strong><span>锁定维度</span></div>
+          <div class="auto-stat"><strong>${state.constraint}</strong><span>约束强度</span></div>
+          <div class="auto-stat"><strong>${state.caseRecommendations.length}</strong><span>推荐示例</span></div>
+        </div>
+        <div class="switch-row"><span class="switch-label">允许弹球碰撞生成变换子方案</span><label class="switch"><input type="checkbox" data-toggle-semi ${state.semiAutoEnabled ? 'checked' : ''}><span></span></label></div>
+        ${locked.length ? `<p style="margin-top:5px;color:var(--clay);font-size:9.5px">当前锁定：${locked.map(esc).join('、')}。半自动变换将跳过这些维度。</p>` : ''}
+      </div>
+      ${renderRecommendations()}`;
+  }
+
+  const pf = ui.prefill || {};
+  ui.prefill = null;
+  const type = ui.activeTransformType;
+  const typeTabs = `<div class="type-tabs" role="tablist" aria-label="五种可拓变换">
+    ${TRANSFORM_TYPES.map(t => `<button type="button" data-transform-type="${t.key}" class="${t.key === type ? 'active' : ''}" role="tab" aria-selected="${t.key === type}">${t.short}</button>`).join('')}
+  </div>`;
+  const purposeVal = esc(pf.purpose || '');
+  const reasonVal = esc(pf.reason || '');
+  let form = '';
+
+  if (type === 'replace') {
+    const dim = pf.dim || DIMS[0].key;
+    const currentVal = active.values[dim] || '';
+    const options = state.keywords[dim].filter(k => k !== currentVal);
+    form = `
+      <div class="form-grid">
+        <div class="form-field"><label>目标维度</label><select data-tf="dim" id="tfDim">${DIMS.map(d => `<option value="${d.key}" ${selectedAttr(d.key, dim)}>${d.label}</option>`).join('')}</select></div>
+        <div class="form-field"><label>原始值</label><input type="text" id="tfOriginal" value="${esc(currentVal)}" readonly></div>
+        <div class="form-field full"><label>替换值 <span class="req">*</span></label><select id="tfReplacement" data-tf="replacement">${options.length ? options.map(v => `<option value="${esc(v)}" ${selectedAttr(v, pf.replacement || '')}>${esc(v)}</option>`).join('') : '<option value="">词库中暂无可用新值</option>'}</select><span class="hint" id="tfReplaceHint">${options.length ? '仅列出当前维度词库中与旧值不同的关键词。' : '请先在关键词库增加该维度关键词。'}</span></div>
+        <div class="form-field full"><label>变换目的 <span class="req">*</span></label><input type="text" data-tf="purpose" value="${purposeVal}" placeholder="例如：强化礼器感，使载体更贴近玉琮语义"></div>
+        <div class="form-field full"><label>变换理由 <span class="req">*</span></label><textarea data-tf="reason" placeholder="说明文化依据、形式动机或工艺考虑">${reasonVal}</textarea></div>
+      </div>
+      <div class="preview-box" id="tfPreview"></div>`;
+  } else if (type === 'increase') {
+    form = `
+      <div class="form-grid">
+        <div class="form-field"><label>作用维度</label><select data-tf="dim">${DIMS.map(d => `<option value="${d.key}" ${selectedAttr(d.key, pf.dim || 'carrier')}>${d.label}</option>`).join('')}</select></div>
+        <div class="form-field"><label>增加类别</label><select data-tf="category">${['装饰','功能','配件','文化符号'].map(v => `<option ${selectedAttr(v, pf.category || '配件')}>${v}</option>`).join('')}</select></div>
+        <div class="form-field full"><label>增加内容 <span class="req">*</span></label><input type="text" data-tf="detail" value="${esc(pf.detail || '')}" placeholder="例如：流苏挂饰、鸟形书签扣、云雷纹边饰"></div>
+        <div class="form-field full"><label>变换目的 <span class="req">*</span></label><input type="text" data-tf="purpose" value="${purposeVal}" placeholder="例如：增加礼器感与使用仪式感"></div>
+        <div class="form-field full"><label>变换理由 <span class="req">*</span></label><textarea data-tf="reason" placeholder="说明新增内容与良渚文化、功能或工艺的关系">${reasonVal}</textarea></div>
+      </div>
+      <div class="preview-box" id="tfPreview"></div>`;
+  } else if (type === 'delete') {
+    form = `
+      <div class="form-grid">
+        <div class="form-field"><label>目标维度</label><select data-tf="dim">${DIMS.map(d => `<option value="${d.key}" ${selectedAttr(d.key, pf.dim || 'pattern')}>${d.label}</option>`).join('')}</select></div>
+        <div class="form-field"><label>删除/弱化方式</label><select data-tf="mode">${['删除','弱化','简化'].map(v => `<option ${selectedAttr(v, pf.mode || '简化')}>${v}</option>`).join('')}</select></div>
+        <div class="form-field full"><label>处理说明 <span class="req">*</span></label><input type="text" data-tf="detail" value="${esc(pf.detail || '')}" placeholder="例如：保留琮体横向分层，弱化细碎纹样"></div>
+        <div class="form-field full"><label>变换目的 <span class="req">*</span></label><input type="text" data-tf="purpose" value="${purposeVal}" placeholder="例如：降低装饰密度，控制工艺复杂度"></div>
+        <div class="form-field full"><label>变换理由 <span class="req">*</span></label><textarea data-tf="reason" placeholder="说明为何移除、弱化或简化该特征">${reasonVal}</textarea></div>
+      </div>
+      <div class="preview-box" id="tfPreview"></div>`;
+  } else if (type === 'scale') {
+    form = `
+      <div class="form-grid">
+        <div class="form-field"><label>目标维度</label><select data-tf="dim">${DIMS.map(d => `<option value="${d.key}" ${selectedAttr(d.key, pf.dim || 'pattern')}>${d.label}</option>`).join('')}</select></div>
+        <div class="form-field"><label>扩缩方式</label><select data-tf="op">${['放大','缩小','局部化','密集化','稀疏化'].map(v => `<option ${selectedAttr(v, pf.op || '局部化')}>${v}</option>`).join('')}</select></div>
+        <div class="form-field full"><label>调整程度：<span id="tfDegreeLabel">${esc(String(pf.degree || 3))} 级</span></label><input type="range" data-tf="degree" min="1" max="5" step="1" value="${pf.degree || 3}" id="tfDegree"></div>
+        <div class="form-field full"><label>调整说明 <span class="req">*</span></label><input type="text" data-tf="detail" value="${esc(pf.detail || '')}" placeholder="例如：将纹样集中于书签上端，保留留白"></div>
+        <div class="form-field full"><label>变换目的 <span class="req">*</span></label><input type="text" data-tf="purpose" value="${purposeVal}" placeholder="例如：调整纹样视觉权重"></div>
+        <div class="form-field full"><label>变换理由 <span class="req">*</span></label><textarea data-tf="reason" placeholder="说明尺度、比例、密度或视觉权重的调整依据">${reasonVal}</textarea></div>
+      </div>
+      <div class="preview-box" id="tfPreview"></div>`;
+  } else if (type === 'combination') {
+    const mode = ui.comboMode;
+    let body = '';
+    if (mode === 'A') {
+      body = `<div class="form-grid">
+          <div class="form-field"><label>维度 A（主承载）</label><select data-tf="dimA">${DIMS.map(d => `<option value="${d.key}" ${selectedAttr(d.key, pf.dimA || 'carrier')}>${d.label}</option>`).join('')}</select></div>
+          <div class="form-field"><label>维度 B（融合线索）</label><select data-tf="dimB">${DIMS.map(d => `<option value="${d.key}" ${selectedAttr(d.key, pf.dimB || 'pattern')}>${d.label}</option>`).join('')}</select></div>
+          <div class="form-field full"><label>融合说明</label><input type="text" data-tf="fusion" value="${esc(pf.fusion || '')}" placeholder="例如：让纹样成为书签夹持结构的一部分"></div>
+        </div>`;
+    } else {
+      const others = state.schemes.filter(s => s.id !== active.id);
+      body = `<div class="form-grid">
+          <div class="form-field"><label>方案 A（父节点）</label><select data-combo-scheme="a">${state.schemes.map(s => `<option value="${s.id}" ${selectedAttr(s.id, active.id)}>${s.no === 0 ? 'R0' : `S${pad2(s.no)}`} · ${esc(s.name)}</option>`).join('')}</select></div>
+          <div class="form-field"><label>方案 B（融合来源）</label><select data-combo-scheme="b">${others.length ? others.map(s => `<option value="${s.id}" ${selectedAttr(s.id, others[0].id)}>${s.no === 0 ? 'R0' : `S${pad2(s.no)}`} · ${esc(s.name)}</option>`).join('') : '<option value="">暂无第二个方案</option>'}</select></div>
+        </div><div class="combo-sheet" id="comboSchemeRows">${renderComboSchemeRows(active.id, others[0]?.id || '')}</div><div class="combo-preview" id="comboSchemePreview"></div>`;
+    }
+    form = `<div class="combo-mode-tabs">
+        <button type="button" data-combo-mode="A" class="${mode === 'A' ? 'active' : ''}">A · 两个维度特征融合</button>
+        <button type="button" data-combo-mode="B" class="${mode === 'B' ? 'active' : ''}">B · 两个完整方案融合</button>
+      </div>${body}<div class="form-grid" style="margin-top:7px">
+        <div class="form-field full"><label>变换目的 <span class="req">*</span></label><input type="text" data-tf="purpose" value="${purposeVal}" placeholder="例如：让载体结构与纹样语义互为支撑"></div>
+        <div class="form-field full"><label>变换理由 <span class="req">*</span></label><textarea data-tf="reason" placeholder="说明为何将两个维度或两个方案放在一起思考">${reasonVal}</textarea></div>
+      </div><div class="preview-box" id="tfPreview"></div>`;
+  }
+
+  return `${typeTabs}<div class="manual-form" id="manualForm" style="margin-top:8px">
+      <p class="hint" style="margin:0 0 1px">${esc(TRANSFORM_MAP[type].description)}</p>
+      ${form}
+      <div class="apply-row"><span class="apply-note">目标：${schemeCode(active)} → 新子方案。${ui.comboMode === 'B' && type === 'combination' ? '方案 B 融合会以方案 A 为父节点。' : '锁定不影响手动受控变换。'}</span><button class="btn btn-primary btn-sm" type="button" id="applyManualTransformBtn">预览并执行${TRANSFORM_MAP[type].label}</button></div>
+    </div>`;
+}
+function renderComboSchemeRows(baseId, sourceId) {
+  const base = schemeById(baseId);
+  const source = schemeById(sourceId);
+  if (!base || !source) return '<p class="hint">至少需要两个完整方案才能执行方案融合。</p>';
+  return DIMS.map(d => `
+    <div class="combo-row">
+      <span class="dim">${d.label}</span>
+      <select data-combo-dim="${d.key}">
+        <option value="A" selected>A：${esc(base.values[d.key])}</option>
+        <option value="B">B：${esc(source.values[d.key])}</option>
+      </select>
+      <span style="font-size:8.5px;color:var(--ink-faint)">组合后取所选值</span>
+    </div>`).join('');
+}
+
+function afterSchemeRender(active) {
+  const slider = document.getElementById('constraintSlider');
+  if (slider) {
+    slider.addEventListener('input', () => {
+      state.constraint = Number(slider.value);
+      slider.style.background = rangeBackground(state.constraint, 0, 100);
+      const level = document.getElementById('constraintLevel');
+      if (level) level.textContent = `${constraintBandLabel()} · ${state.constraint}`;
+      const explain = document.getElementById('constraintExplain');
+      if (explain) explain.textContent = constraintDescription();
+      saveState();
+    });
+    slider.addEventListener('change', () => saveState(true));
+  }
+  if (ui.activeTransformTab === 'manual' && active) {
+    bindManualForm(active);
+  }
+}
+
+function getManualField(name) {
+  return document.querySelector(`#manualForm [data-tf="${name}"]`);
+}
+function getManualValue(name, fallback = '') {
+  const el = getManualField(name);
+  return el ? el.value : fallback;
+}
+function manualDetailFields() {
+  return [...document.querySelectorAll('#manualForm input, #manualForm select, #manualForm textarea')];
+}
+function readManualPurposeReason() {
+  return {
+    purpose: safeText(getManualValue('purpose')),
+    reason: safeText(getManualValue('reason'))
+  };
+}
+
+function bindManualForm(active) {
+  const type = ui.activeTransformType;
+  const dimSelect = getManualField('dim');
+  if (dimSelect) {
+    dimSelect.addEventListener('change', () => {
+      if (type === 'replace') {
+        const dim = dimSelect.value;
+        const current = active.values[dim] || '';
+        const original = document.getElementById('tfOriginal');
+        if (original) original.value = current;
+        const replacement = document.getElementById('tfReplacement');
+        if (replacement) {
+          const opts = state.keywords[dim].filter(v => v !== current);
+          replacement.innerHTML = opts.length
+            ? opts.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('')
+            : '<option value="">词库中暂无可用新值</option>';
+        }
+        const hint = document.getElementById('tfReplaceHint');
+        if (hint) hint.textContent = state.keywords[dim].filter(v => v !== current).length ? '仅列出当前维度词库中与旧值不同的关键词。' : '请先在关键词库增加该维度关键词。';
+      }
+      updateManualPreview(active);
+    });
+  }
+  manualDetailFields().forEach(el => {
+    el.addEventListener('input', () => updateManualPreview(active));
+    el.addEventListener('change', () => updateManualPreview(active));
+  });
+  const degree = getManualField('degree');
+  if (degree) {
+    degree.addEventListener('input', () => {
+      const label = document.getElementById('tfDegreeLabel');
+      if (label) label.textContent = `${degree.value} 级`;
+      updateManualPreview(active);
+    });
+  }
+  if (type === 'combination' && ui.comboMode === 'B') {
+    const sa = document.querySelector('[data-combo-scheme="a"]');
+    const sb = document.querySelector('[data-combo-scheme="b"]');
+    const rerenderRows = () => {
+      const rows = document.getElementById('comboSchemeRows');
+      if (rows) rows.innerHTML = renderComboSchemeRows(sa?.value, sb?.value);
+      bindComboRows(active);
+      updateManualPreview(active);
+    };
+    if (sa) sa.addEventListener('change', rerenderRows);
+    if (sb) sb.addEventListener('change', rerenderRows);
+    bindComboRows(active);
+  }
+  updateManualPreview(active);
+}
+
+function bindComboRows(active) {
+  document.querySelectorAll('[data-combo-dim]').forEach(sel => {
+    sel.addEventListener('change', () => updateManualPreview(active));
+  });
+}
+
+function buildManualCandidate(active, type) {
+  const { purpose, reason } = readManualPurposeReason();
+  if (!purpose) throw new Error('请填写“变换目的”。');
+  if (!reason) throw new Error('请填写“变换理由”。');
+  if (type === 'replace') {
+    const dim = getManualValue('dim');
+    const replacement = safeText(getManualValue('replacement'));
+    if (!dim) throw new Error('请选择目标维度。');
+    if (!replacement) throw new Error('请选择有效的替换值。');
+    if (replacement === active.values[dim]) throw new Error('替换值与原始值相同，未形成变换。');
+    return makeCandidate(active, { [dim]: replacement }, {
+      type, label: '置换变换', targetDims: [dim], purpose, reason, mode: 'manual',
+      detail: `词库新值：${replacement}`
+    });
+  }
+  if (type === 'increase') {
+    const dim = getManualValue('dim');
+    const category = getManualValue('category');
+    const detail = safeText(getManualValue('detail'));
+    if (!dim) throw new Error('请选择作用维度。');
+    if (!detail) throw new Error('请填写要增加的内容。');
+    const old = active.values[dim];
+    return makeCandidate(active, { [dim]: `${old}＋${category}：${detail}` }, {
+      type, label: '增加变换', targetDims: [dim], purpose, reason, mode: 'manual',
+      detail: `增加${category}：${detail}`
+    });
+  }
+  if (type === 'delete') {
+    const dim = getManualValue('dim');
+    const mode = getManualValue('mode');
+    const detail = safeText(getManualValue('detail'));
+    if (!dim) throw new Error('请选择目标维度。');
+    if (!detail) throw new Error('请填写删除、弱化或简化的处理说明。');
+    const old = active.values[dim];
+    const newValue = mode === '删除'
+      ? `无（已移除原特征：${old}；说明：${detail}）`
+      : `${old}（${mode}：${detail}）`;
+    return makeCandidate(active, { [dim]: newValue }, {
+      type, label: '删除变换', targetDims: [dim], purpose, reason, mode: 'manual',
+      detail: `${mode}：${detail}`
+    });
+  }
+  if (type === 'scale') {
+    const dim = getManualValue('dim');
+    const op = getManualValue('op');
+    const degree = Number(getManualValue('degree', '3')) || 3;
+    const detail = safeText(getManualValue('detail'));
+    if (!dim) throw new Error('请选择目标维度。');
+    if (!detail) throw new Error('请填写调整说明。');
+    const old = active.values[dim];
+    return makeCandidate(active, { [dim]: `${op}[${degree}级] · ${old}｜${detail}` }, {
+      type, label: '扩缩变换', targetDims: [dim], purpose, reason, mode: 'manual',
+      detail: `${op} ${degree} 级：${detail}`
+    });
+  }
+  if (type === 'combination') {
+    if (ui.comboMode === 'A') {
+      const dimA = getManualValue('dimA');
+      const dimB = getManualValue('dimB');
+      const fusion = safeText(getManualValue('fusion'));
+      if (!dimA || !dimB) throw new Error('请选择两个维度。');
+      if (dimA === dimB) throw new Error('组合变换需要选择两个不同维度。');
+      const vA = active.values[dimA];
+      const vB = active.values[dimB];
+      const newValue = `${vA}（融合${DIM_MAP[dimB].label}：${vB}${fusion ? `；${fusion}` : ''}）`;
+      return makeCandidate(active, { [dimA]: newValue }, {
+        type, label: '组合变换', targetDims: [dimA, dimB], purpose, reason, mode: 'manual',
+        detail: `维度组合：${DIM_MAP[dimA].label} × ${DIM_MAP[dimB].label}${fusion ? `；${fusion}` : ''}`
+      });
+    }
+    const baseId = document.querySelector('[data-combo-scheme="a"]')?.value;
+    const sourceId = document.querySelector('[data-combo-scheme="b"]')?.value;
+    const base = schemeById(baseId);
+    const source = schemeById(sourceId);
+    if (!base || !source) throw new Error('请选择两个已保存的完整方案。');
+    if (base.id === source.id) throw new Error('方案 A 与方案 B 不能相同。');
+    const values = {};
+    const selectedDims = [];
+    DIMS.forEach(d => {
+      const sel = document.querySelector(`[data-combo-dim="${d.key}"]`);
+      const pick = sel?.value === 'B' ? source : base;
+      values[d.key] = pick.values[d.key];
+      if (sel?.value === 'B') selectedDims.push(d.key);
+    });
+    const changed = DIMS.filter(d => values[d.key] !== base.values[d.key]).map(d => d.key);
+    if (!changed.length) throw new Error('当前选择没有从方案 B 取得任何特征值，未形成方案融合。');
+    return makeCandidate(base, values, {
+      type, label: '组合变换', targetDims: changed, purpose, reason, mode: 'manual',
+      detail: `方案融合：${base.no === 0 ? 'R0' : `S${pad2(base.no)}`} × ${source.no === 0 ? 'R0' : `S${pad2(source.no)}`}`,
+      sourceSchemeId: source.id,
+      sourceSchemeName: source.name
+    });
+  }
+  throw new Error('未知的变换类型。');
+}
+function updateManualPreview(active) {
+  const preview = document.getElementById('tfPreview');
+  if (!preview) return;
+  const type = ui.activeTransformType;
+  try {
+    if (type === 'combination' && ui.comboMode === 'B') {
+      const base = schemeById(document.querySelector('[data-combo-scheme="a"]')?.value);
+      const source = schemeById(document.querySelector('[data-combo-scheme="b"]')?.value);
+      const comboPreview = document.getElementById('comboSchemePreview');
+      if (comboPreview) {
+        if (!base || !source) comboPreview.innerHTML = '请选择方案 A 与方案 B。';
+        else {
+          comboPreview.innerHTML = `<b>融合预览：</b>${DIMS.map(d => {
+            const pick = document.querySelector(`[data-combo-dim="${d.key}"]`)?.value === 'B' ? source : base;
+            return `${d.label}=${esc(pick.values[d.key])}`;
+          }).join('；')}`;
+        }
+      }
+      preview.innerHTML = `<div class="preview-title">方案融合预览</div><div class="preview-line" style="grid-template-columns:52px 1fr"><span>父节点</span><span class="new">${base ? (base.no === 0 ? 'R0' : `S${pad2(base.no)}`) : '—'}</span></div><div class="preview-line" style="grid-template-columns:52px 1fr"><span>融合来源</span><span class="new">${source ? (source.no === 0 ? 'R0' : `S${pad2(source.no)}`) : '—'}</span></div>`;
+      return;
+    }
+    const detail = (() => {
+      if (type === 'replace') {
+        const dim = getManualValue('dim');
+        return { dims: [dim], old: active.values[dim], new: safeText(getManualValue('replacement')) || '（请选择替换值）' };
+      }
+      if (type === 'increase') {
+        const dim = getManualValue('dim');
+        const category = getManualValue('category');
+        const text = safeText(getManualValue('detail')) || '（填写增加内容）';
+        return { dims: [dim], old: active.values[dim], new: `${active.values[dim]}＋${category}：${text}` };
+      }
+      if (type === 'delete') {
+        const dim = getManualValue('dim');
+        const mode = getManualValue('mode');
+        const text = safeText(getManualValue('detail')) || '（填写处理说明）';
+        return { dims: [dim], old: active.values[dim], new: mode === '删除' ? `无（已移除原特征：${active.values[dim]}；说明：${text}）` : `${active.values[dim]}（${mode}：${text}）` };
+      }
+      if (type === 'scale') {
+        const dim = getManualValue('dim');
+        const op = getManualValue('op');
+        const degree = Number(getManualValue('degree', '3')) || 3;
+        const text = safeText(getManualValue('detail')) || '（填写调整说明）';
+        return { dims: [dim], old: active.values[dim], new: `${op}[${degree}级] · ${active.values[dim]}｜${text}` };
+      }
+      if (type === 'combination') {
+        const dimA = getManualValue('dimA');
+        const dimB = getManualValue('dimB');
+        const fusion = safeText(getManualValue('fusion'));
+        const vA = active.values[dimA] || '—';
+        const vB = active.values[dimB] || '—';
+        return { dims: [dimA, dimB], old: vA, new: `${vA}（融合${DIM_MAP[dimB]?.label || ''}：${vB}${fusion ? `；${fusion}` : ''}）` };
+      }
+      return { dims: [], old: '', new: '' };
+    })();
+    preview.innerHTML = `<div class="preview-title">变换前后预览（${detail.dims.map(k => DIM_MAP[k]?.label || k).join(' × ')}）</div>
+      <div class="preview-line"><span class="old">${esc(detail.old || '—')}</span><span class="arrow">→</span><span class="new">${esc(detail.new)}</span></div>`;
+  } catch (err) {
+    preview.innerHTML = `<div class="preview-title">预览</div><div class="hint">${esc(err.message || err)}</div>`;
+  }
+}
+
+function renderTreePanel() {
+  const wrap = document.getElementById('treeContent');
+  if (!wrap) return;
+  document.querySelectorAll('.tree-tabs button').forEach(btn => {
+    const isActive = btn.id === 'treeTabBtn' && ui.activeTreeTab === 'tree'
+      || btn.id === 'compareTabBtn' && ui.activeTreeTab === 'compare'
+      || btn.id === 'logTabBtn' && ui.activeTreeTab === 'logs';
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', String(isActive));
+  });
+  const active = activeScheme();
+  if (ui.activeTreeTab === 'compare') {
+    wrap.innerHTML = renderCompareView();
+    return;
+  }
+  if (ui.activeTreeTab === 'logs') {
+    wrap.innerHTML = renderLogsView();
+    return;
+  }
+  const roots = state.schemes.filter(s => !s.parentId);
+  const compareChips = state.selectedCompare.map(id => {
+    const s = schemeById(id);
+    return s ? `<span class="chip chip-jade">${s.no === 0 ? 'R0' : `S${pad2(s.no)}`} <button class="icon-btn" style="width:16px;height:16px" type="button" data-remove-compare="${s.id}" aria-label="移除对比">×</button></span>` : '';
+  }).join('');
+  const selected = active || null;
+  wrap.innerHTML = `
+    ${selected ? `
+      <div class="active-node-bar">
+        <div>当前起点：<strong>${selected.no === 0 ? 'R0' : `S${pad2(selected.no)}`}</strong> · ${esc(selected.name)}${selected.mark ? ` <span class="tree-mark ${selected.mark}">${selected.mark === 'excellent' ? '优秀' : '待优化'}</span>` : ''}</div>
+        <div class="active-node-actions">
+          <button class="btn btn-xs mark-btn ${selected.mark === 'excellent' ? 'active-excellent' : ''}" type="button" data-action="mark-excellent">${selected.mark === 'excellent' ? '已标优秀' : '标为优秀'}</button>
+          <button class="btn btn-xs mark-btn ${selected.mark === 'optimize' ? 'active-optimize' : ''}" type="button" data-action="mark-optimize">${selected.mark === 'optimize' ? '已标待优化' : '标为待优化'}</button>
+          <button class="btn btn-xs" type="button" data-action="toggle-compare">${state.selectedCompare.includes(selected.id) ? '移出对比' : '加入对比'}</button>
+        </div>
+      </div>` : ''}
+    <p class="compare-help">点击节点切换当前起点并查看完整方案；节点中的复选框可选择两个方案进行对比。选择“回到该节点”后，下一次变换将从该节点继续。</p>
+    ${state.selectedCompare.length ? `<div class="compare-tray"><span>已选对比：</span>${compareChips}${state.selectedCompare.length === 2 ? '<button class="btn btn-xs btn-primary" type="button" data-action="open-compare">查看对比表</button>' : '<span>再选 1 个方案</span>'}</div>` : ''}
+    <div class="tree-wrap">${roots.length ? roots.map(s => renderTreeNode(s)).join('') : '<div class="tree-empty">尚无方案树。完成弹球发散或载入案例后会生成根节点。</div>'}</div>
+    <div class="report-row"><span class="hint" style="font-size:9.5px">报告会包含初始方案、全部节点、完整变换链、辅助评价与免责声明。</span><button class="btn btn-sm" type="button" data-action="export-report">导出完整研究报告</button></div>`;
+}
+
+function renderTreeNode(scheme) {
+  const children = state.schemes.filter(s => s.parentId === scheme.id).sort((a, b) => a.no - b.no);
+  const selected = state.activeId === scheme.id;
+  const compare = state.selectedCompare.includes(scheme.id);
+  const values = DIMS.map(d => `<span><b>${d.label}</b> ${esc(scheme.values[d.key])}</span>`).join('');
+  const type = scheme.transform ? `<span class="tree-node-type">${esc(scheme.transform.label || typeLabel(scheme.transform.type))}</span>` : '<span class="tree-node-type root">初始</span>';
+  return `
+    <div class="tree-root-node">
+      <div class="tree-node ${selected ? 'active' : ''} ${compare ? 'compare-on' : ''}" data-scheme-id="${scheme.id}" tabindex="0" role="button" aria-label="查看方案 ${scheme.no === 0 ? 'R0' : `S${pad2(scheme.no)}`}">
+        <div class="tree-node-head">
+          <div class="tree-node-title">
+            <strong>${scheme.no === 0 ? 'R0' : `S${pad2(scheme.no)}`}</strong>
+            <span class="scheme-name" title="${esc(scheme.name)}">${esc(scheme.name)}</span>
+            ${type}
+            ${scheme.mark ? `<span class="tree-mark ${scheme.mark}">${scheme.mark === 'excellent' ? '优秀' : '待优化'}</span>` : ''}
+          </div>
+          <div class="tree-node-actions">
+            <label class="tree-compare-label" title="加入方案对比"><input type="checkbox" data-compare-id="${scheme.id}" ${compare ? 'checked' : ''}>对比</label>
+          </div>
+        </div>
+        <div class="tree-node-values">${values}</div>
+      </div>
+      ${children.length ? `<ul class="tree-children">${children.map(c => `<li>${renderTreeNode(c)}</li>`).join('')}</ul>` : ''}
+    </div>`;
+}
+function renderCompareView() {
+  if (state.selectedCompare.length !== 2) {
+    const chips = state.selectedCompare.map(id => {
+      const s = schemeById(id);
+      return s ? `<span class="chip chip-jade">${s.no === 0 ? 'R0' : `S${pad2(s.no)}`} ${esc(s.name)}</span>` : '';
+    }).join('');
+    return `<div class="empty-state"><div class="empty-mark">A ⇄ B</div><h3>请选择两个方案进行对比</h3><p>在“方案树”中勾选两个节点，或点击节点后在当前起点操作栏选择“加入对比”。</p>${state.selectedCompare.length ? `<div class="compare-tray" style="justify-content:center">${chips}</div>` : ''}<button class="btn btn-sm" type="button" data-action="go-tree">返回方案树选择</button></div>`;
+  }
+  const [a, b] = state.selectedCompare.map(schemeById);
+  if (!a || !b) return '<div class="empty-state"><h3>对比方案不存在</h3></div>';
+  const ea = evaluateScheme(a);
+  const eb = evaluateScheme(b);
+  const row = (label, va, vb, diff = false) => `<tr><th>${label}</th><td class="${diff ? 'diff' : 'same'}">${esc(va)}</td><td class="${diff ? 'diff' : 'same'}">${esc(vb)}</td></tr>`;
+  return `
+    <p class="compare-help">对比表只比较两个已保存节点；评分与解释均为简化规则提示，不代表客观评判。</p>
+    <div class="table-scroll">
+      <table class="compare-table">
+        <thead><tr><th>特征 / 指标</th><th>${a.no === 0 ? 'R0' : `S${pad2(a.no)}`} · ${esc(a.name)}</th><th>${b.no === 0 ? 'R0' : `S${pad2(b.no)}`} · ${esc(b.name)}</th></tr></thead>
+        <tbody>
+          ${DIMS.map(d => row(d.label, a.values[d.key], b.values[d.key], a.values[d.key] !== b.values[d.key])).join('')}
+          ${row('变换类型', a.transform?.label || '初始方案', b.transform?.label || '初始方案', (a.transform?.label || '初始方案') !== (b.transform?.label || '初始方案'))}
+          ${row('文化关联性', `${ea.cultural}/100 · ${ea.culturalText}`, `${eb.cultural}/100 · ${eb.culturalText}`, ea.cultural !== eb.cultural)}
+          ${row('工艺可行性', `${ea.feasibility}/100 · ${ea.feasibilityText}`, `${eb.feasibility}/100 · ${eb.feasibilityText}`, ea.feasibility !== eb.feasibility)}
+          ${row('创新跨度', `${ea.innovation}/100 · ${ea.innovationText}`, `${eb.innovation}/100 · ${eb.innovationText}`, ea.innovation !== eb.innovation)}
+          ${row('矛盾冲突提示', ea.conflicts.length ? ea.conflicts.join('；') : '未触发内置规则', eb.conflicts.length ? eb.conflicts.join('；') : '未触发内置规则', ea.conflicts.join('|') !== eb.conflicts.join('|'))}
+        </tbody>
+      </table>
+    </div>
+    <div class="report-row">
+      <span class="hint" style="font-size:9.5px">差异单元格以浅朱砂底标示，便于研究记录。</span>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <button class="btn btn-sm" type="button" data-action="clear-compare">清空对比</button>
+        <button class="btn btn-sm" type="button" data-action="export-report">导出完整研究报告</button>
+      </div>
+    </div>`;
+}
+
+function renderLogsView() {
+  if (!state.logs.length) {
+    return `<div class="empty-state"><div class="empty-mark">↳</div><h3>尚无变换记录</h3><p>执行置换、增加、删除、扩缩或组合变换后，每一次变换都会在不变旧方案的前提下生成子节点，并写入完整日志。</p><button class="btn btn-sm" type="button" data-action="focus-transform">进入可拓变换</button></div>`;
+  }
+  const items = [...state.logs].sort((a, b) => b.seq - a.seq).map(log => {
+    const scheme = schemeById(log.schemeId);
+    const changes = (log.targetDims || []).map(k => {
+      const oldV = log.oldValues?.[k] || '—';
+      const newV = log.newValues?.[k] || '—';
+      return `<div><span style="color:var(--jade-deep);font-weight:600">${DIM_MAP[k]?.label || k}</span>：<span class="old">${esc(oldV)}</span> <span style="color:var(--cinnabar)">→</span> <span class="new">${esc(newV)}</span></div>`;
+    }).join('');
+    return `<article class="log-item">
+      <div class="log-head"><span class="log-seq">#${pad2(log.seq)}</span><span class="log-type">${esc(log.typeLabel || typeLabel(log.type))}</span><span class="log-target">${esc(dimsText(log.targetDims))}</span><span class="log-time">${formatDateTime(log.at)}</span></div>
+      <div class="log-change">${changes || '—'}</div>
+      <div class="log-meta"><span>目的：${esc(log.purpose || '—')}</span><span>理由：${esc(log.reason || '—')}</span><span>模式：${esc(log.mode || 'manual')}</span>${log.warningIgnored ? '<span class="log-warning">用户手动忽略约束警告</span>' : ''}${scheme ? `<button class="log-link" type="button" data-locate-scheme="${scheme.id}">定位方案 S${pad2(scheme.no)}</button>` : ''}</div>
+    </article>`;
+  }).join('');
+  const warnings = state.warnings.length ? `
+    <div class="audit-section">
+      <div class="audit-title"><span>约束警告决策留痕</span><span>${state.warnings.length} 条</span></div>
+      ${[...state.warnings].sort((a,b) => b.seq - a.seq).slice(0, 20).map(w => `<div class="audit-item">#${pad2(w.seq)} · ${formatDateTime(w.at)} · ${esc(w.typeLabel || w.type)} · ${esc(dimsText(w.targetDims))} · <strong>${w.decision === 'confirm' ? '确认强制执行' : '取消本次'}</strong> · 约束 ${w.constraint}（${esc(w.band)}）</div>`).join('')}
+    </div>` : '';
+  return `<p class="compare-help">按发生时间倒序显示完整变换链。每个方案节点都会保留父节点、特征值、目的、理由与约束决策。</p><div class="logs-list">${items}</div>${warnings}`;
+}
+/* ============================================================
+   模态框
+   ============================================================ */
+function showModal(options) {
+  const overlay = document.getElementById('modalOverlay');
+  const card = document.getElementById('modalCard');
+  const title = document.getElementById('modalTitle');
+  const subtitle = document.getElementById('modalSubtitle');
+  const body = document.getElementById('modalBody');
+  const actions = document.getElementById('modalActions');
+  if (!overlay || !card) return;
+  ui.lastFocus = document.activeElement;
+  ui.modalOpen = true;
+  ui.modalOnClose = options.onClose || null;
+  title.textContent = options.title || '';
+  subtitle.textContent = options.subtitle || '';
+  body.innerHTML = options.body || '';
+  actions.innerHTML = '';
+  card.className = `modal-card ${options.size || ''}`.trim();
+  (options.actions || []).forEach((action, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `btn ${action.variant || ''}`.trim();
+    btn.textContent = action.label;
+    btn.dataset.modalAction = String(idx);
+    btn.addEventListener('click', () => {
+      const keepOpen = Boolean(action.keepOpen);
+      if (!keepOpen) closeModal(false);
+      if (typeof action.onClick === 'function') action.onClick();
+    });
+    actions.appendChild(btn);
+  });
+  overlay.hidden = false;
+  document.body.classList.add('modal-open');
+  window.setTimeout(() => {
+    const focusTarget = body.querySelector('input,select,textarea,button') || actions.querySelector('button') || document.getElementById('modalCloseBtn');
+    if (focusTarget) focusTarget.focus();
+  }, 30);
+}
+
+function closeModal(callOnClose = true) {
+  const overlay = document.getElementById('modalOverlay');
+  if (!overlay || overlay.hidden) return;
+  overlay.hidden = true;
+  document.body.classList.remove('modal-open');
+  ui.modalOpen = false;
+  const fn = ui.modalOnClose;
+  ui.modalOnClose = null;
+  if (callOnClose && typeof fn === 'function') fn();
+  if (ui.lastFocus && typeof ui.lastFocus.focus === 'function') {
+    try { ui.lastFocus.focus(); } catch (_) {}
+  }
+}
+
+function confirmDialog(options) {
+  showModal({
+    title: options.title || '请确认',
+    subtitle: options.subtitle || '',
+    body: `<p class="modal-note" style="font-size:11.5px;color:var(--ink-soft);line-height:1.7">${options.body || ''}</p>`,
+    size: 'narrow',
+    onClose: options.onClose || null,
+    actions: [
+      { label: options.cancelLabel || '取消', variant: '' },
+      { label: options.confirmLabel || '确认', variant: options.danger ? 'btn-danger' : 'btn-primary', onClick: options.onConfirm }
+    ]
+  });
+}
+
+function showMessageModal(title, message, type = 'info') {
+  showModal({
+    title,
+    subtitle: type === 'error' ? '操作未完成' : '',
+    body: `<div class="${type === 'error' ? 'import-error' : 'modal-note'}">${esc(message)}</div>`,
+    size: 'narrow',
+    actions: [{ label: '知道了', variant: 'btn-primary' }]
+  });
+}
+
+function showWarningModal(candidate, evalResult, assessment, onConfirm, onCancel) {
+  const changeRows = (candidate.transform.targetDims || []).map(k => `
+    <div class="preview-line" style="grid-template-columns:48px minmax(0,1fr)"><span>${DIM_MAP[k]?.label || k}</span><span><span class="old">${esc(candidate.transform.oldValues[k])}</span> <span style="color:var(--cinnabar)">→</span> <span class="new">${esc(candidate.transform.newValues[k])}</span></span></div>`).join('');
+  showModal({
+    title: '构思约束提示',
+    subtitle: `${constraintBandLabel()} · 强度 ${state.constraint}/100 · 规则化辅助提示，不强制阻止操作`,
+    size: 'wide',
+    onClose: onCancel,
+    body: `
+      <div class="warning-hero"><div class="warning-icon">!</div><div><strong>本次变换触发低关联或矛盾风险提示</strong><p>${esc(assessment.reason)} 你可以取消本次变换，也可以确认继续；确认后日志将标记“用户手动忽略约束警告”。</p></div></div>
+      <div class="warning-grid">
+        <div class="warning-stat"><span>文化关联性</span><strong class="${scoreTone(evalResult.cultural)}">${evalResult.cultural}</strong></div>
+        <div class="warning-stat"><span>工艺可行性</span><strong class="${scoreTone(evalResult.feasibility)}">${evalResult.feasibility}</strong></div>
+        <div class="warning-stat conflict"><span>矛盾提示</span><strong>${evalResult.conflicts.length} 条</strong></div>
+      </div>
+      ${evalResult.conflicts.length ? `<ul class="warning-conflicts">${evalResult.conflicts.map(c => `<li>${esc(c)}</li>`).join('')}</ul>` : '<p class="modal-note">未触发具体冲突条目，但综合提示指数低于当前约束档阈值。</p>'}
+      <div class="preview-box" style="margin-top:10px"><div class="preview-title">拟执行的变换：${esc(candidate.transform.label)} · ${esc(dimsText(candidate.transform.targetDims))}</div>${changeRows}</div>
+      <p class="modal-note" style="margin:10px 0 0">说明：以上指数不是可拓关联函数计算结果，也不是客观文化或市场评价，仅用于研究原型的约束提示演示。</p>`,
+    actions: [
+      { label: '取消本次', variant: '', onClick: onCancel },
+      { label: '仍然执行并记录', variant: 'btn-danger', onClick: onConfirm }
+    ]
+  });
+}
+
+function showCaseModal() {
+  const body = `<div class="case-list">${CASE_LIBRARY.map(c => `
+    <div class="case-card">
+      <div class="case-card-head"><h4>${esc(c.name)}</h4><button class="btn btn-sm btn-primary" type="button" data-case-load="${c.id}">加载案例</button></div>
+      <p class="case-desc">${esc(c.description)}</p>
+      <div class="case-values">${DIMS.map(d => `<span class="chip">${d.label} · ${esc(c.values[d.key])}</span>`).join('')}</div>
+      <div class="case-rec"><strong>推荐变换：</strong>${c.recommendations.map(r => {
+        const t = TRANSFORM_MAP[r.type];
+        return `${t?.label || r.type}（${r.dim ? DIM_MAP[r.dim]?.label : `${DIM_MAP[r.dimA]?.label}×${DIM_MAP[r.dimB]?.label}`}）`;
+      }).join('；')}。</div>
+    </div>`).join('')}</div>
+    <p class="modal-note" style="margin-top:10px">加载案例会建立初始根节点，并补充案例特征值到当前词库；若已有实验树，会在确认后替换当前实验树。关键词库中的其他自定义词条会保留。</p>`;
+  showModal({
+    title: '良渚文化预置案例库',
+    subtitle: '三套研究起点；每套案例附有推荐变换示例，可载入手动面板进一步编辑。',
+    size: 'wide',
+    body,
+    actions: [{ label: '关闭', variant: '' }]
+  });
+}
+
+function loadCase(caseId) {
+  const c = CASE_LIBRARY.find(x => x.id === caseId);
+  if (!c) return;
+  DIMS.forEach(d => {
+    const v = c.values[d.key];
+    if (v && !state.keywords[d.key].includes(v)) state.keywords[d.key].push(v);
+  });
+  createRootScheme(c.values, { origin: 'case', name: `R0 · ${c.name.replace(/^案例 \d+ · /, '')}` });
+  state.caseId = c.id;
+  state.caseName = c.name;
+  state.caseRecommendations = clone(c.recommendations);
+  state.locks = emptyLocks();
+  state.stage = 2;
+  state.semiAutoEnabled = true;
+  editBuffer = { ...c.values };
+  editDirty = false;
+  saveState(true);
+  resetBallState();
+  ui.activeTransformTab = 'semi';
+  ui.activeTreeTab = 'tree';
+  renderAll();
+  toast(`已加载 ${c.name}，可作为阶段二基元继续变换。`, 'success', 4200);
+}
+
+function requestCaseLoad(caseId) {
+  const c = CASE_LIBRARY.find(x => x.id === caseId);
+  if (!c) return;
+  closeModal(false);
+  if (state.schemes.length) {
+    confirmDialog({
+      title: '替换当前实验树？',
+      body: `即将加载“${esc(c.name)}”。当前实验树、变换链与警告留痕会被清空；关键词库中的自定义词条会保留。建议先导出全量数据备份。`,
+      confirmLabel: '确认加载案例',
+      danger: true,
+      onConfirm: () => loadCase(caseId)
+    });
+  } else {
+    loadCase(caseId);
+  }
+}
+
+function openDimensionQuickEdit(dimKey) {
+  const dim = DIM_MAP[dimKey];
+  if (!dim) return;
+  const stage1 = state.stage === 1;
+  if (state.stage === 2 && state.locks[dimKey]) {
+    toast(`${dim.label}已锁定。请先在当前物元卡片或弹球锁定栏中解锁。`, 'warning');
+    return;
+  }
+  const active = activeScheme();
+  const current = stage1 ? state.draft[dimKey] : (active?.values?.[dimKey] || '');
+  if (state.stage === 2 && !active) {
+    toast('请先生成初始方案。', 'warning');
+    return;
+  }
+  const values = state.keywords[dimKey];
+  const body = `
+    <p class="modal-note" style="margin-bottom:9px">当前${dim.label}：<strong>${esc(current || '未填写')}</strong>。${stage1 ? '选择或新增词条后设为本轮草图特征值。' : '选择或新增词条后将执行一次置换变换，旧方案不会被覆盖。'}</p>
+    <div class="quick-values" id="quickValues">
+      ${values.map((v, idx) => `<button type="button" class="quick-value ${v === current ? 'current' : ''}" data-quick-value="${esc(v)}">${esc(v)}${v === current ? '<small>当前</small>' : ''}</button>`).join('')}
+    </div>
+    <div class="form-grid">
+      <div class="form-field full"><label>自定义新值</label><input type="text" id="quickCustomValue" placeholder="输入新关键词后可加入词库"></div>
+      <div class="form-field full" style="flex-direction:row;align-items:center;gap:7px"><input type="checkbox" id="quickAddToLibrary" checked style="width:13px;height:13px;accent-color:var(--jade)"><label for="quickAddToLibrary" style="font-weight:400;color:var(--ink-faint)">同时加入${dim.label}关键词库</label></div>
+    </div>
+    <div class="preview-box" style="margin-top:9px" id="quickPreview"><div class="preview-title">操作预览</div><div class="preview-line"><span class="old">${esc(current || '未填写')}</span><span class="arrow">→</span><span class="new" id="quickPreviewValue">未选择</span></div></div>`;
+  showModal({
+    title: `编辑${dim.label}特征`,
+    subtitle: stage1 ? '阶段一 · 直接维护本轮发散草图' : '阶段二 · 以置换变换生成新子方案',
+    size: 'narrow',
+    body,
+    actions: [
+      { label: '取消', variant: '' },
+      { label: stage1 ? '设为草图值' : '执行快速置换', variant: 'btn-primary', keepOpen: true, onClick: () => {
+        const custom = safeText(document.getElementById('quickCustomValue')?.value);
+        const selectedEl = document.querySelector('.quick-value.selected');
+        const chosen = custom || selectedEl?.dataset.quickValue || '';
+        if (!chosen) { toast('请选择或输入一个特征值。', 'error'); return; }
+        if (document.getElementById('quickAddToLibrary')?.checked) {
+          const norm = safeText(chosen);
+          if (norm && !state.keywords[dimKey].includes(norm)) state.keywords[dimKey].push(norm);
+        }
+        if (stage1) {
+          closeModal(false);
+          state.draft[dimKey] = chosen;
+          if (!state.hitDims.includes(dimKey)) state.hitDims.push(dimKey);
+          saveState();
+          renderExplorePanel();
+          renderKeywords();
+          if (valuesComplete(state.draft)) {
+            if (ball.running) pauseBall();
+            createRootScheme(state.draft, { origin: 'draft', name: 'R0 · 初始物元' });
+            toast('五维已集齐，初始物元方案已生成，可进入可拓变换。', 'success', 4200);
+          } else {
+            toast(`${dim.label}已设为“${chosen}”。`, 'success');
+          }
+        } else {
+          if (chosen === current) { toast('特征值未变化，无变换可执行。', 'info'); return; }
+          closeModal(false);
+          const candidate = makeCandidate(active, { [dimKey]: chosen }, {
+            type: 'replace', label: '置换变换', targetDims: [dimKey],
+            purpose: `边界点击快速调整${dim.label}`,
+            reason: '用户通过五边形维度边入口直接指定特征值，用于快速探索局部调整。',
+            mode: 'quick', detail: `新增值：${chosen}`
+          });
+          applyCandidate(candidate);
+        }
+      }}
+    ]
+  });
+  const customInput = document.getElementById('quickCustomValue');
+  const refresh = () => {
+    const custom = safeText(customInput?.value);
+    const sel = document.querySelector('.quick-value.selected');
+    const value = custom || sel?.dataset.quickValue || '';
+    const el = document.getElementById('quickPreviewValue');
+    if (el) el.textContent = value || '未选择';
+  };
+  document.querySelectorAll('.quick-value').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.quick-value').forEach(x => x.classList.remove('selected'));
+      btn.classList.add('selected');
+      if (customInput) customInput.value = '';
+      refresh();
+    });
+  });
+  if (customInput) customInput.addEventListener('input', () => {
+    document.querySelectorAll('.quick-value').forEach(x => x.classList.remove('selected'));
+    refresh();
+  });
+  refresh();
+}
+/* ============================================================
+   方案操作
+   ============================================================ */
+function schemeCode(scheme) {
+  return scheme.no === 0 ? 'R0' : `S${pad2(scheme.no)}`;
+}
+function schemeNotation(scheme, values = scheme.values) {
+  return `R = (文创产品，{${DIMS.map(d => `${d.label}:${values[d.key] || '—'}`).join('，')}})`;
+}
+function schemeMarkdown(scheme, values = scheme.values) {
+  const evaluation = evaluateScheme(scheme);
+  return `### ${schemeCode(scheme)} · ${scheme.name}
+
+- 物元表达式：\`${schemeNotation(scheme, values)}\`
+- 父节点：${scheme.parentId ? schemeCode(schemeById(scheme.parentId) || { no: 0 }) : '无（根节点）'}
+- 变换类型：${scheme.transform?.label || '初始方案'}
+- 创建时间：${formatDateTime(scheme.createdAt)}
+
+| 维度 | 特征值 |
+|---|---|
+${DIMS.map(d => `| ${d.label} | ${String(values[d.key] || '').replace(/\|/g, '\\|')} |`).join('\n')}
+
+- 文化关联性：${evaluation.cultural}/100（${evaluation.culturalText}）
+- 工艺可行性：${evaluation.feasibility}/100（${evaluation.feasibilityText}）
+- 创新跨度：${evaluation.innovation}/100（${evaluation.innovationText}）
+- 矛盾冲突提示：${evaluation.conflicts.length ? evaluation.conflicts.join('；') : '未触发内置规则'}
+- 规则说明：以上为简化规则辅助提示，不是客观评分。
+`;
+}
+function selectScheme(id) {
+  const scheme = schemeById(id);
+  if (!scheme) return;
+  if (editDirty) toast('已切换方案，未保存的手动修订已放弃。', 'info');
+  state.activeId = scheme.id;
+  state.stage = 2;
+  editBuffer = { ...scheme.values };
+  editDirty = false;
+  saveState();
+  renderAll();
+  toast(`当前起点已切换为 ${schemeCode(scheme)}。`, 'info', 2200);
+  if (window.innerWidth < 720) {
+    document.getElementById('schemeTitle')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+function saveCurrentSchemeEdits() {
+  const active = activeScheme();
+  if (!active) return;
+  if (!editBuffer) editBuffer = { ...active.values };
+  const values = {};
+  for (const d of DIMS) {
+    const v = safeText(editBuffer[d.key]);
+    if (!v) {
+      toast(`请填写${d.label}特征值后再保存。`, 'error');
+      return;
+    }
+    values[d.key] = v;
+  }
+  const changed = DIMS.filter(d => values[d.key] !== active.values[d.key]).map(d => d.key);
+  if (!changed.length) {
+    editDirty = false;
+    editBuffer = { ...active.values };
+    saveState(true);
+    renderAll();
+    toast('当前方案已保存（没有特征值变化）。', 'success');
+    return;
+  }
+  const candidate = makeCandidate(active, values, {
+    type: 'manual-edit',
+    label: '手工修订',
+    targetDims: changed,
+    purpose: '在当前物元卡片中手动调整特征值',
+    reason: '用户直接修订特征值；为保证路径可追溯，保存时创建新的子方案节点而不覆盖原件。',
+    mode: 'manual-edit',
+    detail: `手动修订：${changed.map(k => DIM_MAP[k].label).join('、')}`
+  });
+  applyCandidate(candidate, {
+    onCommitted: () => {
+      editDirty = false;
+      editBuffer = null;
+    }
+  });
+}
+function toggleMark(kind) {
+  const active = activeScheme();
+  if (!active) return;
+  active.mark = active.mark === kind ? null : kind;
+  saveState(true);
+  renderAll();
+  toast(active.mark === 'excellent' ? '已标记为优秀方案。' : active.mark === 'optimize' ? '已标记为待优化方案。' : '已取消方案标记。', 'success');
+}
+function toggleCompare(id = state.activeId) {
+  if (!id) return;
+  if (state.selectedCompare.includes(id)) {
+    state.selectedCompare = state.selectedCompare.filter(x => x !== id);
+  } else {
+    if (state.selectedCompare.length >= 2) {
+      toast('最多同时对比两个方案；请先移除已选方案。', 'warning');
+      return;
+    }
+    state.selectedCompare.push(id);
+  }
+  saveState();
+  renderWorkflow();
+  renderTreePanel();
+}
+function removeCompare(id) {
+  state.selectedCompare = state.selectedCompare.filter(x => x !== id);
+  saveState();
+  renderWorkflow();
+  renderTreePanel();
+}
+function clearCompare() {
+  state.selectedCompare = [];
+  saveState();
+  renderWorkflow();
+  renderTreePanel();
+}
+function copyCurrentScheme() {
+  const active = activeScheme();
+  if (!active) return;
+  copyText(`${schemeCode(active)} · ${active.name}\n${schemeNotation(active)}\n\n` +
+    DIMS.map(d => `${d.label}：${active.values[d.key]}`).join('\n'));
+}
+function exportCurrentSchemeJson() {
+  const active = activeScheme();
+  if (!active) return;
+  const data = {
+    type: 'liangzhu-extension-scheme',
+    version: APP_VERSION,
+    exportedAt: nowIso(),
+    scheme: active,
+    evaluation: evaluateScheme(active),
+    disclaimer: '规则化辅助提示，不代表客观文化、艺术或市场评价。'
+  };
+  downloadText(`良渚可拓方案_${schemeCode(active)}_${fileStamp()}.json`, JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
+}
+function exportCurrentSchemeMarkdown() {
+  const active = activeScheme();
+  if (!active) return;
+  const md = `# 良渚文化文创物元方案 ${schemeCode(active)}\n\n生成时间：${formatDateTime(nowIso())}\n\n${schemeMarkdown(active)}\n\n> 本原型为毕业设计研究工具；评价仅为规则化辅助提示，不代表客观评判。\n`;
+  downloadText(`良渚可拓方案_${schemeCode(active)}_${fileStamp()}.md`, md, 'text/markdown;charset=utf-8');
+}
+function exportAllData() {
+  const payload = {
+    type: 'liangzhu-extension-full-data',
+    version: APP_VERSION,
+    exportedAt: nowIso(),
+    app: '基于可拓变换的良渚文化文创创新构思实验平台',
+    data: state
+  };
+  downloadText(`良渚可拓实验_全量数据_${fileStamp()}.json`, JSON.stringify(payload, null, 2), 'application/json;charset=utf-8');
+}
+function exportKeywords() {
+  const payload = {
+    type: 'liangzhu-keyword-library',
+    version: APP_VERSION,
+    exportedAt: nowIso(),
+    keywords: state.keywords
+  };
+  downloadText(`良渚关键词库_${fileStamp()}.json`, JSON.stringify(payload, null, 2), 'application/json;charset=utf-8');
+}
+/* ============================================================
+   研究报告导出
+   ============================================================ */
+function mdCell(value) {
+  return String(value ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+}
+function exportFullReport() {
+  const root = rootScheme();
+  const schemes = [...state.schemes].sort((a, b) => a.no - b.no);
+  const logs = [...state.logs].sort((a, b) => a.seq - b.seq);
+  const warnings = [...state.warnings].sort((a, b) => a.seq - b.seq);
+  const lines = [];
+  lines.push('# 基于可拓变换的良渚文化文创创新构思实验报告');
+  lines.push('');
+  lines.push(`- 生成时间：${formatDateTime(nowIso())}`);
+  lines.push(`- 项目名称：基于可拓变换的良渚文化文创创新构思实验平台`);
+  lines.push(`- 研究定位：毕业设计研究辅助原型；不是 AI 绘图工具，也不是普通随机关键词生成器。`);
+  lines.push(`- 案例：${state.caseName ? mdCell(state.caseName) : '未加载预置案例（使用自定义发散结果）'}`);
+  lines.push(`- 方案节点：${schemes.length} 个；变换记录：${logs.length} 条；警告决策：${warnings.length} 条`);
+  lines.push('');
+  lines.push('## 1. 项目与理论说明');
+  lines.push('');
+  lines.push('本平台以物元模型 R=(N,c,v) 表示文创产品构思：N 为“文创产品”，c 取主题、载体、纹样、色彩、材质五个核心特征维度，v 为相应特征值。阶段一通过正五边形弹球碰撞采样五维关键词，生成初始物元方案；阶段二以当前方案为基元执行五类可拓基本变换，形成方案树与可追溯的变换链。');
+  lines.push('');
+  lines.push('阶段一：弹球在正五边形内部做真实线段碰撞，五条边映射五个维度。集齐五维后生成根方案 R0。维度锁定只约束弹球与半自动路径，不阻止用户在手动受控面板中显式编辑。');
+  lines.push('');
+  lines.push('阶段二：撞边对应置换变换，撞顶点对应相邻维度组合变换，内部飞行随机触发增加、删除或扩缩变换；同时保留手动受控变换路径。每次变换都以旧节点为父节点生成全新子节点，不覆盖历史方案。');
+  lines.push('');
+  lines.push('## 2. 初始物元方案');
+  lines.push('');
+  if (root) lines.push(schemeMarkdown(root));
+  else {
+    lines.push('尚未生成初始物元方案。');
+    lines.push('');
+  }
+  lines.push('## 3. 完整方案节点');
+  lines.push('');
+  if (schemes.length) {
+    schemes.forEach(scheme => {
+      lines.push(schemeMarkdown(scheme));
+      if (scheme.mark) lines.push(`- 人工标记：${scheme.mark === 'excellent' ? '优秀方案' : '待优化方案'}`);
+      if (scheme.transform) {
+        lines.push(`- 变换目的：${scheme.transform.purpose || '—'}`);
+        lines.push(`- 变换理由：${scheme.transform.reason || '—'}`);
+        if (scheme.transform.warningIgnored) lines.push(`- 约束处理：用户手动忽略约束警告并确认执行`);
+        if (scheme.transform.sourceSchemeName) lines.push(`- 融合来源：${scheme.transform.sourceSchemeName}`);
+      }
+      lines.push('');
+    });
+  } else {
+    lines.push('暂无方案节点。');
+    lines.push('');
+  }
+  lines.push('## 4. 完整变换链');
+  lines.push('');
+  if (logs.length) {
+    lines.push('| 序号 | 子方案 | 类型 | 目标维度 | 旧值 | 新值 | 变换目的 | 变换理由 | 约束处理 |');
+    lines.push('|---:|---|---|---|---|---|---|---|---|');
+    logs.forEach(log => {
+      const oldText = (log.targetDims || []).map(k => `${DIM_MAP[k]?.label || k}=${log.oldValues?.[k] || ''}`).join('；');
+      const newText = (log.targetDims || []).map(k => `${DIM_MAP[k]?.label || k}=${log.newValues?.[k] || ''}`).join('；');
+      lines.push(`| ${log.seq} | ${schemeCode(schemeById(log.schemeId) || { no: 0 })} | ${mdCell(log.typeLabel || log.type)} | ${mdCell(dimsText(log.targetDims))} | ${mdCell(oldText)} | ${mdCell(newText)} | ${mdCell(log.purpose)} | ${mdCell(log.reason)} | ${log.warningIgnored ? '用户手动忽略约束警告' : '未触发/未忽略'} |`);
+    });
+  } else {
+    lines.push('暂无变换记录。');
+  }
+  lines.push('');
+  lines.push('## 5. 约束警告决策留痕');
+  lines.push('');
+  if (warnings.length) {
+    warnings.forEach(w => {
+      lines.push(`- 警告 #${w.seq} · ${formatDateTime(w.at)} · ${w.typeLabel || w.type} · ${dimsText(w.targetDims)} · 决策：${w.decision === 'confirm' ? '确认强制执行' : '取消本次'} · 约束强度 ${w.constraint}（${w.band}）`);
+      lines.push(`  - 提示：${w.warningReason || '—'}`);
+      lines.push(`  - 评价快照：文化 ${w.evaluation?.cultural ?? '—'} / 工艺 ${w.evaluation?.feasibility ?? '—'} / 创新 ${w.evaluation?.innovation ?? '—'}`);
+    });
+  } else {
+    lines.push('本次实验未触发约束警告，或尚未执行会触发警告的变换。');
+  }
+  lines.push('');
+  lines.push('## 6. 关键词库');
+  lines.push('');
+  DIMS.forEach(d => {
+    lines.push(`- **${d.label}**：${state.keywords[d.key].map(mdCell).join('、')}`);
+  });
+  lines.push('');
+  lines.push('## 7. 辅助评价说明');
+  lines.push('');
+  lines.push('文化关联性、工艺可行性与创新跨度均为本原型内置规则的透明化辅助提示。系统不计算可拓关联函数，不宣称输出客观文化、艺术或市场价值判断。矛盾冲突提示来自有限的关键词与工艺规则，必须由设计师、考古研究者与工艺专家进一步验证。');
+  lines.push('');
+  lines.push('## 8. 原型免责声明');
+  lines.push('');
+  lines.push('> 本原型是毕业设计研究工具，基于可拓学物元与可拓变换理论，用于文创产品构思阶段发散迭代。系统输出的关联性、可行性仅为规则化辅助提示，不代表客观评判，方案文化真实性、艺术价值需要设计师与专家进一步验证。');
+  lines.push('');
+  lines.push('> 本工具不自动判定文化真实性、艺术价值、市场价值，也不替代设计决策、用户测试与专家评审。');
+  lines.push('');
+  downloadText(`良渚可拓构思_研究报告_${fileStamp()}.md`, lines.join('\n'), 'text/markdown;charset=utf-8');
+}
+/* ============================================================
+   导入与恢复
+   ============================================================ */
+function readFileText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('文件读取失败。'));
+    reader.readAsText(file, 'utf-8');
+  });
+}
+async function handleKeywordImport(file) {
+  try {
+    const text = await readFileText(file);
+    let parsed;
+    try { parsed = JSON.parse(text); } catch (err) { throw new Error('JSON 语法无效：' + err.message); }
+    const source = parsed && parsed.keywords ? parsed.keywords : parsed;
+    const normalized = normalizeKeywords(source);
+    confirmDialog({
+      title: '导入关键词库？',
+      body: `文件格式校验通过。导入后将替换当前五维关键词库，已有方案树不会被删除。当前共有 ${DIMS.reduce((n, d) => n + state.keywords[d.key].length, 0)} 个关键词，导入文件包含 ${DIMS.reduce((n, d) => n + normalized[d.key].length, 0)} 个关键词。`,
+      confirmLabel: '校验通过，导入',
+      onConfirm: () => {
+        state.keywords = normalized;
+        saveState(true);
+        renderKeywords();
+        renderSchemePanel();
+        toast('关键词库导入成功。', 'success');
+      }
+    });
+  } catch (err) {
+    showMessageModal('关键词库导入失败', `${err.message}\n\n现有词库与实验数据未发生任何改动。请确认文件包含 theme、carrier、pattern、color、material 五个字符串数组，且每个维度至少有一个非空关键词。`, 'error');
+  } finally {
+    const input = document.getElementById('keywordFileInput');
+    if (input) input.value = '';
+  }
+}
+async function handleFullImport(file) {
+  try {
+    const text = await readFileText(file);
+    let parsed;
+    try { parsed = JSON.parse(text); } catch (err) { throw new Error('JSON 语法无效：' + err.message); }
+    const source = parsed && parsed.data ? parsed.data : parsed;
+    const imported = sanitizeState(source);
+    const ids = new Set(imported.schemes.map(s => s.id));
+    const visiting = new Set();
+    const visited = new Set();
+    const walk = (id) => {
+      if (visiting.has(id)) throw new Error('方案树存在循环引用。');
+      if (visited.has(id)) return;
+      visiting.add(id);
+      const node = imported.schemes.find(s => s.id === id);
+      if (node?.parentId && ids.has(node.parentId)) walk(node.parentId);
+      visiting.delete(id);
+      visited.add(id);
+    };
+    imported.schemes.forEach(s => walk(s.id));
+    const summary = `关键词 ${DIMS.reduce((n, d) => n + imported.keywords[d.key].length, 0)} 个 · 方案节点 ${imported.schemes.length} 个 · 变换日志 ${imported.logs.length} 条 · 警告留痕 ${imported.warnings.length} 条。`;
+    confirmDialog({
+      title: '导入全量研究数据？',
+      body: `文件已通过格式校验：${summary}<br><br>确认后将替换当前关键词库、方案树、变换链与警告记录。建议先导出现有全量数据备份。`,
+      confirmLabel: '确认替换并导入',
+      danger: true,
+      onConfirm: () => {
+        state = imported;
+        state.savedAt = nowIso();
+        editBuffer = state.activeId ? { ...activeScheme().values } : null;
+        editDirty = false;
+        ui.activeTreeTab = 'tree';
+        ui.activeTransformTab = state.schemes.length ? 'semi' : 'manual';
+        resetBallState();
+        saveState(true);
+        renderAll();
+        toast('全量研究数据导入成功。', 'success', 4000);
+      }
+    });
+  } catch (err) {
+    showMessageModal('全量数据导入失败', `${err.message}\n\n现有 localStorage 数据与当前页面状态均未被覆盖。请使用本工具“导出全量数据”生成的标准 JSON，或检查方案节点父引用与五维特征值完整性。`, 'error');
+  } finally {
+    const input = document.getElementById('fullFileInput');
+    if (input) input.value = '';
+  }
+}
+function restoreDefaultKeywords() {
+  confirmDialog({
+    title: '恢复默认词库？',
+    body: '将把主题、载体、纹样、色彩、材质五个维度的关键词恢复为良渚文化默认词库。已保存的方案树与变换记录不会删除；自定义关键词会被移除。',
+    confirmLabel: '恢复默认词库',
+    danger: true,
+    onConfirm: () => {
+      state.keywords = clone(DEFAULT_KEYWORDS);
+      saveState(true);
+      renderKeywords();
+      renderSchemePanel();
+      toast('关键词库已恢复为默认设置。', 'success');
+    }
+  });
+}
+function resetEverything() {
+  confirmDialog({
+    title: '恢复全部默认设置？',
+    body: '将清空关键词自定义、全部方案树节点、变换链、警告留痕与弹球设置，并恢复初始工作区。此操作不可撤销，建议先导出全量数据或完整研究报告。',
+    confirmLabel: '清空并恢复默认',
+    danger: true,
+    onConfirm: () => {
+      state = createDefaultState();
+      editBuffer = null;
+      editDirty = false;
+      ui.activeTreeTab = 'tree';
+      ui.activeTransformTab = 'semi';
+      ui.activeTransformType = 'replace';
+      ui.editingKeyword = null;
+      ui.prefill = null;
+      resetBallState();
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+      saveState(true);
+      renderAll();
+      toast('已恢复全部默认设置。', 'success');
+    }
+  });
+}
+/* ============================================================
+   关键词库增删改
+   ============================================================ */
+function addKeyword(dimKey, raw) {
+  const value = safeText(raw);
+  if (!value) { toast('关键词不能为空。', 'error'); return false; }
+  if (state.keywords[dimKey].includes(value)) { toast('该关键词已存在，已阻止重复添加。', 'warning'); return false; }
+  state.keywords[dimKey].push(value);
+  saveState();
+  renderKeywords();
+  renderSchemePanel();
+  toast(`已添加${DIM_MAP[dimKey].label}关键词：${value}`, 'success');
+  return true;
+}
+function deleteKeyword(dimKey, index) {
+  if (state.keywords[dimKey].length <= 1) {
+    toast('每个维度至少保留 1 个关键词。', 'warning');
+    return;
+  }
+  const [removed] = state.keywords[dimKey].splice(index, 1);
+  if (ui.editingKeyword && ui.editingKeyword.dim === dimKey) ui.editingKeyword = null;
+  saveState();
+  renderKeywords();
+  renderSchemePanel();
+  toast(`已删除关键词：${removed}`, 'info');
+}
+function startEditKeyword(dimKey, index) {
+  ui.editingKeyword = { dim: dimKey, index };
+  renderKeywords();
+}
+function saveEditKeyword(dimKey, index) {
+  const input = document.getElementById('kwEditInput');
+  const value = safeText(input?.value);
+  if (!value) { toast('关键词不能为空。', 'error'); return; }
+  const duplicate = state.keywords[dimKey].some((k, i) => i !== index && k === value);
+  if (duplicate) { toast('该关键词已存在，不能重复。', 'warning'); return; }
+  state.keywords[dimKey][index] = value;
+  ui.editingKeyword = null;
+  saveState();
+  renderKeywords();
+  renderSchemePanel();
+  toast('关键词修改已保存。', 'success');
+}
+/* ============================================================
+   弹球事件与半自动变换
+   ============================================================ */
+const ball = {
+  x: 0, y: 0, vx: 0.8, vy: 0.6, r: 8,
+  running: false, singleHit: false, lastFrame: 0,
+  nextInteriorAt: 0, initialized: false,
+  stats: { collisions: 0, vertices: 0, triggers: 0 },
+  edgeFlash: {}, vertexFlash: {}, pulseAt: 0,
+  lastCollisionKey: {}, lastTimerUi: 0
+};
+
+function randomChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+function randomKeyword(dimKey, exclude = '') {
+  const list = state.keywords[dimKey] || [];
+  const options = list.filter(v => v !== exclude);
+  return randomChoice(options.length ? options : list) || '';
+}
+function unlockedDims() {
+  return DIMS.filter(d => !state.locks[d.key]);
+}
+function showBallMessage(html) {
+  const el = document.getElementById('ballStatusText');
+  if (el) el.innerHTML = html;
+}
+
+function handleBoundaryEvent(dimKeys, isVertex) {
+  if (state.stage === 1) {
+    const changed = [];
+    for (const key of dimKeys) {
+      if (state.locks[key]) continue;
+      const next = randomKeyword(key, state.draft[key]);
+      if (next) {
+        state.draft[key] = next;
+        changed.push(key);
+        if (!state.hitDims.includes(key)) state.hitDims.push(key);
+      }
+    }
+    state.stage = 1;
+    if (changed.length) saveState();
+    renderExplorePanel();
+    if (valuesComplete(state.draft)) {
+      ball.running = false;
+      ball.singleHit = false;
+      createRootScheme(state.draft, { origin: 'draft', name: 'R0 · 初始物元' });
+      toast('五维发散完成：初始物元方案 R0 已生成，进入可拓变换阶段。', 'success', 4600);
+      renderAll();
+      return;
+    }
+    if (ball.singleHit) pauseBall();
+    renderExplorePanel();
+    return;
+  }
+
+  if (!state.semiAutoEnabled) {
+    showBallMessage('<strong>碰撞已记录</strong> · 半自动变换触发已关闭，仅保留弹球观测');
+    return;
+  }
+  const active = activeScheme();
+  if (!active) {
+    showBallMessage('<strong>缺少当前方案</strong> · 请先生成初始物元或选择方案节点');
+    return;
+  }
+  if (isVertex) {
+    if (dimKeys.some(k => state.locks[k])) {
+      showBallMessage('<strong>顶点组合被跳过</strong> · 相邻维度中存在锁定项，解锁后可触发组合变换');
+      if (ball.singleHit && ball.running) pauseBall();
+      return;
+    }
+    const [a, b] = dimKeys;
+    const va = active.values[a];
+    const vb = active.values[b];
+    const candidate = makeCandidate(active, { [a]: `${va}（顶点碰撞融合${DIM_MAP[b].label}：${vb}）` }, {
+      type: 'combination', label: '组合变换', targetDims: [a, b],
+      purpose: `顶点碰撞触发${DIM_MAP[a].label}与${DIM_MAP[b].label}的组合`,
+      reason: `半自动弹球命中五边形顶点，系统将相邻两维特征建立融合表达，在构思约束强度 ${state.constraint} 下生成新分支。`,
+      mode: 'semi-auto', detail: `顶点组合：${DIM_MAP[a].label} × ${DIM_MAP[b].label}`
+    });
+    runAutoCandidate(candidate, { kind: 'vertex' });
+    return;
+  }
+  const key = dimKeys[0];
+  if (state.locks[key]) {
+    showBallMessage(`<strong>${DIM_MAP[key].label}已锁定</strong> · 碰撞不替换该维度`);
+    if (ball.singleHit && ball.running) pauseBall();
+    return;
+  }
+  const next = randomKeyword(key, active.values[key]);
+  if (!next || next === active.values[key]) {
+    showBallMessage(`<strong>${DIM_MAP[key].label}无可用新词</strong> · 请先在关键词库补充词条`);
+    if (ball.singleHit && ball.running) pauseBall();
+    return;
+  }
+  const candidate = makeCandidate(active, { [key]: next }, {
+    type: 'replace', label: '置换变换', targetDims: [key],
+    purpose: `边界碰撞触发${DIM_MAP[key].label}置换`,
+    reason: `半自动弹球命中${DIM_MAP[key].label}边，从词库采样新值，以当前方案为基元生成置换子方案。`,
+    mode: 'semi-auto', detail: `边界置换：${next}`
+  });
+  runAutoCandidate(candidate, { kind: 'edge' });
+}
+
+function runAutoCandidate(candidate, options = {}) {
+  const shouldResume = ball.running && !ball.singleHit;
+  ball.running = false;
+  ball.singleHit = false;
+  renderExplorePanel();
+  applyCandidate(candidate, {
+    onCommitted: () => {
+      ball.stats.triggers += 1;
+      ball.pulseAt = performance.now();
+      renderExplorePanel();
+      if (shouldResume && state.semiAutoEnabled) {
+        resumeBall();
+      } else {
+        ball.nextInteriorAt = 0;
+        updateInteriorTimerDisplay(performance.now(), true);
+      }
+    },
+    onCancelled: () => {
+      ball.running = false;
+      ball.nextInteriorAt = 0;
+      renderExplorePanel();
+      updateInteriorTimerDisplay(performance.now(), true);
+      showBallMessage('<strong>变换已取消</strong> · 弹球已暂停，可检查约束提示后继续');
+    }
+  });
+}
+
+function scheduleInteriorTrigger() {
+  if (state.stage === 2 && state.semiAutoEnabled && ball.running) {
+    const delay = 7200 + Math.random() * 5200;
+    ball.nextInteriorAt = performance.now() + delay;
+  } else {
+    ball.nextInteriorAt = 0;
+  }
+}
+
+function triggerInteriorRandom() {
+  const active = activeScheme();
+  if (!active) return;
+  const available = unlockedDims();
+  if (!available.length) {
+    ball.nextInteriorAt = 0;
+    showBallMessage('<strong>内部随机触发跳过</strong> · 五维均已锁定');
+    return;
+  }
+  const dim = randomChoice(available);
+  const kind = randomChoice(['increase', 'delete', 'scale']);
+  let candidate;
+  if (kind === 'increase') {
+    const category = randomChoice(['装饰', '功能', '配件', '文化符号']);
+    const detailMap = {
+      theme: ['水乡叙事层次', '祭祀场景线索'],
+      carrier: ['流苏挂饰', '鸟形书签扣', '可拆卸铜质底座'],
+      pattern: ['细密云雷地纹', '鸟首局部刻线'],
+      color: ['陶土褐边饰', '砂金局部点缀'],
+      material: ['局部黄铜镶嵌', '浅浮雕木作工艺']
+    };
+    const detail = randomChoice(detailMap[dim.key]);
+    candidate = makeCandidate(active, { [dim.key]: `${active.values[dim.key]}＋${category}：${detail}` }, {
+      type: 'increase', label: '增加变换', targetDims: [dim.key],
+      purpose: `内部飞行随机触发${dim.label}增加`,
+      reason: `弹球在五边形内部飞行时触发随机发散事件，为${dim.label}增加“${detail}”，探索附加文化或功能线索。`,
+      mode: 'semi-auto', detail: `增加${category}：${detail}`
+    });
+  } else if (kind === 'delete') {
+    const mode = randomChoice(['弱化', '简化']);
+    const detailMap = {
+      theme: ['保留核心叙事，弱化次级背景', '压缩故事线索为单一符号'],
+      carrier: ['简化结构层次，保留基本使用功能', '弱化装饰性配件'],
+      pattern: ['保留核心识别轮廓，简化细碎层次', '弱化周边填充纹样'],
+      color: ['降低辅助色面积，保留主色', '弱化高对比边饰'],
+      material: ['简化表面处理，保留材质本色', '弱化拼接工艺']
+    };
+    const detail = randomChoice(detailMap[dim.key]);
+    candidate = makeCandidate(active, { [dim.key]: `${active.values[dim.key]}（${mode}：${detail}）` }, {
+      type: 'delete', label: '删除变换', targetDims: [dim.key],
+      purpose: `内部飞行随机触发${dim.label}${mode}`,
+      reason: `通过${mode}而非完全移除来降低复杂度，保留${dim.label}核心可识别线索。`,
+      mode: 'semi-auto', detail: `${mode}：${detail}`
+    });
+  } else {
+    const op = randomChoice(['放大', '缩小', '局部化', '密集化', '稀疏化']);
+    const degree = 2 + Math.floor(Math.random() * 3);
+    const detailMap = {
+      theme: '调整叙事篇幅与主次关系',
+      carrier: '调整载体尺度、比例或功能区域',
+      pattern: '调整纹样密度与视觉权重',
+      color: '调整色彩面积与主辅关系',
+      material: '调整材质表现面积与工艺权重'
+    };
+    candidate = makeCandidate(active, { [dim.key]: `${op}[${degree}级] · ${active.values[dim.key]}｜${detailMap[dim.key]}` }, {
+      type: 'scale', label: '扩缩变换', targetDims: [dim.key],
+      purpose: `内部飞行随机触发${dim.label}${op}`,
+      reason: `${detailMap[dim.key]}，以 ${degree} 级调整探索不同的视觉与工艺权重。`,
+      mode: 'semi-auto', detail: `${op} ${degree} 级：${detailMap[dim.key]}`
+    });
+  }
+  runAutoCandidate(candidate, { kind: 'interior' });
+}
+/* ============================================================
+   Canvas 正五边形与真实线段碰撞
+   ============================================================ */
+const pentagon = { cx: 0, cy: 0, r: 0, vertices: [], edges: [], labels: [] };
+let ballCanvas = null;
+let ballCtx = null;
+let canvasAnimationStarted = false;
+
+function initCanvas() {
+  ballCanvas = document.getElementById('ballCanvas');
+  if (!ballCanvas) return;
+  ballCtx = ballCanvas.getContext('2d');
+  resizeCanvas();
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => resizeCanvas());
+    ro.observe(ballCanvas.parentElement);
+  } else {
+    window.addEventListener('resize', resizeCanvas);
+  }
+  ballCanvas.addEventListener('click', handleCanvasClick);
+  ballCanvas.addEventListener('mousemove', handleCanvasMove);
+  ballCanvas.addEventListener('mouseleave', () => { ballCanvas.style.cursor = 'default'; });
+  resetBallPhysics(true);
+  if (!canvasAnimationStarted) {
+    canvasAnimationStarted = true;
+    requestAnimationFrame(canvasLoop);
+  }
+}
+
+function resizeCanvas() {
+  if (!ballCanvas || !ballCtx) return;
+  const rect = ballCanvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.25);
+  const width = Math.max(240, Math.floor(rect.width));
+  const height = Math.max(220, Math.floor(rect.height));
+  const oldW = ballCanvas.width / dpr;
+  const oldH = ballCanvas.height / dpr;
+  ballCanvas.width = Math.floor(width * dpr);
+  ballCanvas.height = Math.floor(height * dpr);
+  ballCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  rebuildPentagon(width, height);
+  if (!ball.initialized || !oldW || !oldH) {
+    resetBallPhysics(true);
+  } else if (!pointInPolygon(ball.x, ball.y, pentagon.vertices, -ball.r * 0.2)) {
+    resetBallPhysics(true);
+  }
+  drawCanvas(performance.now());
+}
+
+function rebuildPentagon(width, height) {
+  const cx = width / 2;
+  const cy = height / 2 + 5;
+  const r = Math.max(76, Math.min(width * 0.34, height * 0.35));
+  pentagon.cx = cx;
+  pentagon.cy = cy;
+  pentagon.r = r;
+  pentagon.vertices = Array.from({ length: 5 }, (_, i) => {
+    const angle = (-90 + i * 72) * Math.PI / 180;
+    return { x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r };
+  });
+  pentagon.edges = [];
+  pentagon.labels = [];
+  for (let i = 0; i < 5; i++) {
+    const p1 = pentagon.vertices[i];
+    const p2 = pentagon.vertices[(i + 1) % 5];
+    const mx = (p1.x + p2.x) / 2;
+    const my = (p1.y + p2.y) / 2;
+    let nx = -(p2.y - p1.y);
+    let ny = p2.x - p1.x;
+    const len = Math.hypot(nx, ny) || 1;
+    nx /= len; ny /= len;
+    if (nx * (cx - mx) + ny * (cy - my) < 0) { nx *= -1; ny *= -1; }
+    pentagon.edges.push({ p1, p2, mx, my, nx, ny, dim: DIMS[i].key });
+    const outwardX = -nx;
+    const outwardY = -ny;
+    const lx = mx + outwardX * 28;
+    const ly = my + outwardY * 26;
+    const lw = 42;
+    const lh = 21;
+    pentagon.labels.push({
+      x: lx, y: ly, w: lw, h: lh,
+      rect: { x: lx - lw / 2, y: ly - lh / 2, w: lw, h: lh },
+      dim: DIMS[i].key, text: DIMS[i].label, edgeIndex: i
+    });
+  }
+}
+
+function resetBallPhysics(initial = false) {
+  if (!pentagon.cx) return;
+  const angle = -0.55 + Math.random() * 1.1;
+  const radius = Math.min(20, pentagon.r * 0.16) * Math.random();
+  ball.x = pentagon.cx + Math.cos(angle) * radius;
+  ball.y = pentagon.cy + Math.sin(angle) * radius;
+  ball.vx = Math.cos(angle + 0.6);
+  ball.vy = Math.sin(angle + 0.6);
+  normalizeBallVelocity();
+  ball.running = false;
+  ball.singleHit = false;
+  ball.nextInteriorAt = 0;
+  ball.initialized = true;
+  if (initial) {
+    ball.stats = { collisions: 0, vertices: 0, triggers: 0 };
+    ball.edgeFlash = {};
+    ball.vertexFlash = {};
+  }
+  renderExplorePanel();
+}
+
+function resetBallState() {
+  ball.stats = { collisions: 0, vertices: 0, triggers: 0 };
+  ball.edgeFlash = {};
+  ball.vertexFlash = {};
+  ball.lastCollisionKey = {};
+  resetBallPhysics(true);
+}
+
+function normalizeBallVelocity() {
+  const len = Math.hypot(ball.vx, ball.vy) || 1;
+  ball.vx /= len;
+  ball.vy /= len;
+}
+
+function pointInPolygon(x, y, vertices, margin = 0) {
+  let inside = false;
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const xi = vertices[i].x, yi = vertices[i].y;
+    const xj = vertices[j].x, yj = vertices[j].y;
+    const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi + 1e-9) + xi);
+    if (intersect) inside = !inside;
+  }
+  if (!inside) return false;
+  if (margin > 0) {
+    for (const edge of pentagon.edges || []) {
+      const cp = closestPointOnSegment(x, y, edge.p1, edge.p2);
+      if (Math.hypot(x - cp.x, y - cp.y) < margin) return false;
+    }
+  }
+  return true;
+}
+
+function closestPointOnSegment(px, py, a, b) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len2 = dx * dx + dy * dy || 1;
+  let t = ((px - a.x) * dx + (py - a.y) * dy) / len2;
+  t = clamp(t, 0, 1);
+  return { x: a.x + t * dx, y: a.y + t * dy, t };
+}
+function startBall(single = false) {
+  if (ui.modalOpen) return;
+  if (state.stage === 2 && !activeScheme()) {
+    toast('请先生成初始方案或载入案例。', 'warning');
+    return;
+  }
+  if (state.stage === 2 && !state.semiAutoEnabled) {
+    state.semiAutoEnabled = true;
+    saveState();
+    renderAll();
+  }
+  if (!ball.initialized) resetBallPhysics(true);
+  if (ball.running) return;
+  normalizeBallVelocity();
+  ball.running = true;
+  ball.singleHit = Boolean(single);
+  ball.lastFrame = performance.now();
+  if (state.stage === 2 && state.semiAutoEnabled && !single) scheduleInteriorTrigger();
+  else ball.nextInteriorAt = 0;
+  renderExplorePanel();
+  drawCanvas(performance.now());
+}
+
+function pauseBall() {
+  ball.running = false;
+  ball.singleHit = false;
+  ball.nextInteriorAt = 0;
+  renderExplorePanel();
+  updateInteriorTimerDisplay(performance.now(), true);
+}
+
+function resumeBall() {
+  if (ui.modalOpen) return;
+  if (state.stage === 2 && !activeScheme()) return;
+  ball.running = true;
+  ball.singleHit = false;
+  ball.lastFrame = performance.now();
+  if (state.stage === 2 && state.semiAutoEnabled && !ball.nextInteriorAt) scheduleInteriorTrigger();
+  renderExplorePanel();
+}
+
+function resetBallButton() {
+  const wasStage1 = state.stage === 1;
+  if (wasStage1 && state.draft && DIMS.some(d => safeText(state.draft[d.key]))) {
+    state.draft = emptyValues();
+    state.hitDims = [];
+    saveState();
+  }
+  resetBallState();
+  renderAll();
+  toast(wasStage1 ? '已重置发散草图与弹球。' : '已重置弹球位置和碰撞统计；方案树保持不变。', 'info');
+}
+
+function handleCanvasMove(event) {
+  if (!ballCanvas) return;
+  const point = canvasPoint(event);
+  const hit = findCanvasHit(point.x, point.y);
+  ballCanvas.style.cursor = hit !== null ? 'pointer' : 'default';
+}
+
+function canvasPoint(event) {
+  const rect = ballCanvas.getBoundingClientRect();
+  return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+}
+
+function findCanvasHit(x, y) {
+  for (const label of pentagon.labels) {
+    const r = label.rect;
+    if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return label.edgeIndex;
+  }
+  let best = null;
+  for (const edge of pentagon.edges) {
+    const cp = closestPointOnSegment(x, y, edge.p1, edge.p2);
+    const dist = Math.hypot(x - cp.x, y - cp.y);
+    if (dist < 16 && (!best || dist < best.dist)) best = { edge, dist };
+  }
+  return best ? best.edge.edgeIndex : null;
+}
+
+function handleCanvasClick(event) {
+  const p = canvasPoint(event);
+  const edgeIndex = findCanvasHit(p.x, p.y);
+  if (edgeIndex === null) return;
+  openDimensionQuickEdit(DIMS[edgeIndex].key);
+}
+
+function canvasLoop(now) {
+  const dt = ball.lastFrame ? Math.min((now - ball.lastFrame) / 1000, 0.034) : 0;
+  ball.lastFrame = now;
+  if (ball.running) {
+    stepBallPhysics(dt, now);
+    if (state.stage === 2 && state.semiAutoEnabled && !ball.singleHit && ball.running && ball.nextInteriorAt && now >= ball.nextInteriorAt && !ui.modalOpen) {
+      ball.nextInteriorAt = 0;
+      triggerInteriorRandom();
+    }
+    updateInteriorTimerDisplay(now);
+  }
+  drawCanvas(now);
+  requestAnimationFrame(canvasLoop);
+}
+
+function stepBallPhysics(dt, now) {
+  if (!pentagon.r) return;
+  const distance = state.speed * dt;
+  const steps = Math.max(1, Math.ceil(distance / 2.2));
+  const stepDistance = distance / steps;
+  for (let s = 0; s < steps; s++) {
+    ball.x += ball.vx * stepDistance;
+    ball.y += ball.vy * stepDistance;
+    const hit = resolveBallCollisions(now);
+    if (hit || !ball.running) break;
+  }
+  if (!pointInPolygon(ball.x, ball.y, pentagon.vertices, -ball.r * 0.45)) {
+    resetBallPhysics(false);
+  }
+  normalizeBallVelocity();
+}
+
+function resolveBallCollisions(now) {
+  if (!pentagon.edges.length) return false;
+  for (let i = 0; i < pentagon.edges.length; i++) {
+    const edge = pentagon.edges[i];
+    const cp = closestPointOnSegment(ball.x, ball.y, edge.p1, edge.p2);
+    const dx = ball.x - cp.x;
+    const dy = ball.y - cp.y;
+    const dist = Math.hypot(dx, dy);
+    const approaches = ball.vx * edge.nx + ball.vy * edge.ny < 0;
+    if (dist <= ball.r + 1.0 && approaches) {
+      let pushX = dist > 0.01 ? dx / dist : edge.nx;
+      let pushY = dist > 0.01 ? dy / dist : edge.ny;
+      const dot = ball.vx * pushX + ball.vy * pushY;
+      if (dot < 0) {
+        ball.vx -= 2 * dot * pushX;
+        ball.vy -= 2 * dot * pushY;
+      }
+      ball.x = cp.x + pushX * (ball.r + 1.35);
+      ball.y = cp.y + pushY * (ball.r + 1.35);
+      normalizeBallVelocity();
+
+      const vDist0 = Math.hypot(ball.x - edge.p1.x, ball.y - edge.p1.y);
+      const vDist1 = Math.hypot(ball.x - edge.p2.x, ball.y - edge.p2.y);
+      const nearVertex = Math.min(vDist0, vDist1) < ball.r * 2.15;
+      let key;
+      let dimKeys;
+      let vertexIndex = -1;
+      if (nearVertex) {
+        vertexIndex = vDist0 < vDist1 ? i : (i + 1) % 5;
+        const ePrev = (vertexIndex + 4) % 5;
+        const eNext = vertexIndex;
+        dimKeys = [DIMS[ePrev].key, DIMS[eNext].key];
+        key = `vertex-${vertexIndex}`;
+      } else {
+        dimKeys = [edge.dim];
+        key = `edge-${i}`;
+      }
+      const last = ball.lastCollisionKey[key] || 0;
+      if (now - last > 165) {
+        ball.lastCollisionKey[key] = now;
+        ball.stats.collisions += 1;
+        if (nearVertex) {
+          ball.stats.vertices += 1;
+          ball.vertexFlash[vertexIndex] = now;
+          dimKeys.forEach(k => { ball.edgeFlash[k] = now; });
+          ball.pulseAt = now;
+        } else {
+          ball.edgeFlash[edge.dim] = now;
+          ball.pulseAt = now;
+        }
+        updateCollisionStatDom();
+        handleBoundaryEvent(dimKeys, nearVertex);
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function updateCollisionStatDom() {
+  const cc = document.getElementById('collisionCount');
+  const vc = document.getElementById('vertexCount');
+  if (cc) cc.textContent = ball.stats.collisions;
+  if (vc) vc.textContent = ball.stats.vertices;
+}
+
+function updateInteriorTimerDisplay(now, force = false) {
+  if (!force && now - ball.lastTimerUi < 280) return;
+  ball.lastTimerUi = now;
+  const el = document.getElementById('interiorTimer');
+  if (!el) return;
+  if (state.stage === 2 && state.semiAutoEnabled && ball.running && ball.nextInteriorAt) {
+    el.textContent = `内部触发 ${Math.max(0, Math.ceil((ball.nextInteriorAt - now) / 1000))}s`;
+  } else if (state.stage === 2 && state.semiAutoEnabled && !ball.running) {
+    el.textContent = '内部触发待启动';
+  } else {
+    el.textContent = '';
+  }
+}
+function roundedRectPath(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + w, y, x + w, y + h, radius);
+  ctx.arcTo(x + w, y + h, x, y + h, radius);
+  ctx.arcTo(x, y + h, x, y, radius);
+  ctx.arcTo(x, y, x + w, y, radius);
+  ctx.closePath();
+}
+
+function drawCanvas(now) {
+  if (!ballCtx || !pentagon.r) return;
+  const ctx = ballCtx;
+  const w = ballCanvas.clientWidth;
+  const h = ballCanvas.clientHeight;
+  ctx.clearRect(0, 0, w, h);
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(62,116,104,.055)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 7]);
+  ctx.beginPath();
+  ctx.arc(pentagon.cx, pentagon.cy, pentagon.r * 0.56, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(pentagon.cx, pentagon.cy, pentagon.r * 1.08, 0, Math.PI * 2);
+  ctx.stroke();
+  pentagon.vertices.forEach(v => {
+    ctx.beginPath();
+    ctx.moveTo(pentagon.cx, pentagon.cy);
+    ctx.lineTo(v.x, v.y);
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  ctx.save();
+  ctx.beginPath();
+  pentagon.vertices.forEach((v, i) => i ? ctx.lineTo(v.x, v.y) : ctx.moveTo(v.x, v.y));
+  ctx.closePath();
+  const fillGrad = ctx.createRadialGradient(pentagon.cx, pentagon.cy - 20, 10, pentagon.cx, pentagon.cy, pentagon.r * 1.15);
+  fillGrad.addColorStop(0, 'rgba(255,253,248,.72)');
+  fillGrad.addColorStop(0.72, 'rgba(228,238,233,.28)');
+  fillGrad.addColorStop(1, 'rgba(217,207,189,.14)');
+  ctx.fillStyle = fillGrad;
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(62,116,104,.5)';
+  ctx.font = '600 13px Georgia, "Songti SC", serif';
+  ctx.fillText('R = (N, c, v)', pentagon.cx, pentagon.cy + 2);
+  ctx.fillStyle = 'rgba(101,95,85,.45)';
+  ctx.font = '9.5px "Microsoft YaHei", sans-serif';
+  ctx.fillText('五维物元空间', pentagon.cx, pentagon.cy + 17);
+  ctx.restore();
+
+  pentagon.edges.forEach(edge => {
+    const flashStart = ball.edgeFlash[edge.dim] || 0;
+    const age = now - flashStart;
+    const active = age >= 0 && age < 520;
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = active ? 'rgba(178,75,61,.86)' : 'rgba(62,116,104,.58)';
+    ctx.lineWidth = active ? 3.1 : 1.45;
+    if (active) {
+      ctx.shadowColor = 'rgba(178,75,61,.3)';
+      ctx.shadowBlur = 8 * (1 - age / 520);
+    }
+    ctx.beginPath();
+    ctx.moveTo(edge.p1.x, edge.p1.y);
+    ctx.lineTo(edge.p2.x, edge.p2.y);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  pentagon.vertices.forEach((v, i) => {
+    const flashStart = ball.vertexFlash[i] || 0;
+    const age = now - flashStart;
+    const active = age >= 0 && age < 560;
+    ctx.save();
+    if (active) {
+      ctx.strokeStyle = `rgba(178,75,61,${0.36 * (1 - age / 560)})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(v.x, v.y, 8 + 8 * (age / 560), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = active ? '#b24b3d' : 'rgba(62,116,104,.72)';
+    ctx.beginPath();
+    ctx.arc(v.x, v.y, active ? 3.3 : 2.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+
+  pentagon.labels.forEach(label => {
+    const age = now - (ball.edgeFlash[label.dim] || 0);
+    const active = age >= 0 && age < 520;
+    const r = label.rect;
+    ctx.save();
+    ctx.fillStyle = active ? 'rgba(244,227,222,.95)' : 'rgba(255,253,248,.9)';
+    ctx.strokeStyle = active ? 'rgba(178,75,61,.5)' : 'rgba(199,185,163,.82)';
+    ctx.lineWidth = 1;
+    roundedRectPath(ctx, r.x, r.y, r.w, r.h, 7);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = active ? '#9c3e34' : '#4d6e66';
+    ctx.font = '700 11px "Microsoft YaHei", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label.text, label.x, label.y + 0.5);
+    ctx.restore();
+  });
+
+  if (ball.pulseAt) {
+    const age = now - ball.pulseAt;
+    if (age < 420) {
+      ctx.save();
+      ctx.strokeStyle = `rgba(178,75,61,${0.2 * (1 - age / 420)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r + age * 0.04, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(116,53,42,.26)';
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 2;
+  const ballGrad = ctx.createRadialGradient(ball.x - ball.r * 0.36, ball.y - ball.r * 0.38, 0.5, ball.x, ball.y, ball.r * 1.1);
+  ballGrad.addColorStop(0, '#d97b6c');
+  ballGrad.addColorStop(0.55, '#BA5446');
+  ballGrad.addColorStop(1, '#A23F33');
+  ctx.fillStyle = ballGrad;
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = 'rgba(255,255,255,.7)';
+  ctx.beginPath();
+  ctx.arc(ball.x - 2.5, ball.y - 3, 1.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+/* ============================================================
+   事件绑定与初始化
+   ============================================================ */
+function refreshSchemeDirtyUi() {
+  const active = activeScheme();
+  if (!active || !editBuffer) return;
+  const changed = DIMS.filter(d => safeText(editBuffer[d.key]) !== active.values[d.key]);
+  editDirty = changed.length > 0;
+  document.querySelectorAll('[data-edit-dim]').forEach(input => {
+    const row = input.closest('.dim-row');
+    if (row) row.classList.toggle('edited', changed.includes(input.dataset.editDim));
+  });
+  const saveBtn = document.querySelector('[data-action="save-scheme"]');
+  if (saveBtn) {
+    saveBtn.textContent = editDirty ? '保存修订为子方案' : '保存当前方案';
+    saveBtn.classList.toggle('btn-primary', editDirty);
+  }
+  let dirty = document.querySelector('.dirty-note');
+  if (editDirty && !dirty) {
+    const stage = document.querySelector('.scheme-stage');
+    if (stage) {
+      dirty = document.createElement('span');
+      dirty.className = 'dirty-note';
+      dirty.textContent = '有未保存的手动修订';
+      stage.prepend(dirty);
+    }
+  } else if (!editDirty && dirty) {
+    dirty.remove();
+  }
+}
+
+function focusTransformWorkspace(preferManual = false) {
+  if (preferManual) ui.activeTransformTab = 'manual';
+  renderSchemePanel();
+  window.setTimeout(() => {
+    const el = document.getElementById('transformWorkspace');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 40);
+}
+
+function handleSchemeAction(action) {
+  const active = activeScheme();
+  switch (action) {
+    case 'focus-explore':
+      document.getElementById('exploreTitle')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      break;
+    case 'open-cases':
+      showCaseModal();
+      break;
+    case 'save-scheme':
+      saveCurrentSchemeEdits();
+      break;
+    case 'copy-scheme':
+      copyCurrentScheme();
+      break;
+    case 'export-scheme-json':
+      exportCurrentSchemeJson();
+      break;
+    case 'export-scheme-md':
+      exportCurrentSchemeMarkdown();
+      break;
+    case 'goto-transform':
+      focusTransformWorkspace(false);
+      break;
+    case 'mark-excellent':
+      toggleMark('excellent');
+      break;
+    case 'mark-optimize':
+      toggleMark('optimize');
+      break;
+    case 'toggle-compare':
+      toggleCompare(active?.id);
+      break;
+    case 'open-compare':
+      ui.activeTreeTab = 'compare';
+      renderTreePanel();
+      break;
+    case 'clear-compare':
+      clearCompare();
+      break;
+    case 'go-tree':
+      ui.activeTreeTab = 'tree';
+      renderTreePanel();
+      break;
+    case 'export-report':
+      exportFullReport();
+      break;
+    case 'focus-transform':
+      focusTransformWorkspace(true);
+      break;
+    default:
+      break;
+  }
+}
+
+function bindStaticEvents() {
+  document.getElementById('openCaseBtn').addEventListener('click', showCaseModal);
+  document.getElementById('exportReportTopBtn').addEventListener('click', exportFullReport);
+  document.getElementById('resetAllBtn').addEventListener('click', resetEverything);
+  document.getElementById('aboutBtn').addEventListener('click', () => {
+    document.getElementById('about').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('startBallBtn').addEventListener('click', () => startBall(false));
+  document.getElementById('pauseBallBtn').addEventListener('click', pauseBall);
+  document.getElementById('resetBallBtn').addEventListener('click', resetBallButton);
+  document.getElementById('singleHitBtn').addEventListener('click', () => startBall(true));
+  document.getElementById('modeDivergenceBtn').addEventListener('click', () => {
+    if (state.stage === 2) toast('当前已进入阶段二。若需重新发散，请使用“恢复全部默认”开启新实验。', 'info', 3600);
+    else toast('当前为阶段一：弹球边界碰撞将采样五维关键词。', 'info');
+  });
+  document.getElementById('modeSemiBtn').addEventListener('click', () => {
+    if (state.stage === 1) { toast('请先完成五维发散，生成初始物元方案。', 'warning'); return; }
+    state.semiAutoEnabled = true;
+    saveState();
+    renderAll();
+    toast('半自动变换模式已启用：弹球撞边/顶点将生成子方案。', 'success');
+  });
+  const speed = document.getElementById('speedSlider');
+  speed.value = state.speed;
+  speed.addEventListener('input', () => {
+    state.speed = Number(speed.value);
+    document.getElementById('speedValue').textContent = `${state.speed} px/s`;
+    saveState();
+  });
+  speed.addEventListener('change', () => saveState(true));
+
+  document.getElementById('restoreKeywordsBtn').addEventListener('click', restoreDefaultKeywords);
+  document.getElementById('exportKeywordsBtn').addEventListener('click', exportKeywords);
+  document.getElementById('importKeywordsBtn').addEventListener('click', () => document.getElementById('keywordFileInput').click());
+  document.getElementById('exportAllBtn').addEventListener('click', exportAllData);
+  document.getElementById('importAllBtn').addEventListener('click', () => document.getElementById('fullFileInput').click());
+  document.getElementById('keywordFileInput').addEventListener('change', event => {
+    const file = event.target.files?.[0];
+    if (file) handleKeywordImport(file);
+  });
+  document.getElementById('fullFileInput').addEventListener('change', event => {
+    const file = event.target.files?.[0];
+    if (file) handleFullImport(file);
+  });
+
+  document.getElementById('treeTabBtn').addEventListener('click', () => { ui.activeTreeTab = 'tree'; renderTreePanel(); });
+  document.getElementById('compareTabBtn').addEventListener('click', () => { ui.activeTreeTab = 'compare'; renderTreePanel(); });
+  document.getElementById('logTabBtn').addEventListener('click', () => { ui.activeTreeTab = 'logs'; renderTreePanel(); });
+
+  document.getElementById('modalCloseBtn').addEventListener('click', () => closeModal(true));
+  document.getElementById('modalOverlay').addEventListener('click', event => {
+    if (event.target === event.currentTarget) closeModal(true);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      if (ui.modalOpen) closeModal(true);
+      else if (ui.editingKeyword) { ui.editingKeyword = null; renderKeywords(); }
+    }
+  });
+
+  document.getElementById('dimensionLocks').addEventListener('change', handleSchemeChange);
+  document.getElementById('keywordGroups').addEventListener('click', handleKeywordClick);
+  document.getElementById('keywordGroups').addEventListener('keydown', handleKeywordKeydown);
+  document.getElementById('schemeContent').addEventListener('click', handleSchemeClick);
+  document.getElementById('schemeContent').addEventListener('input', handleSchemeInput);
+  document.getElementById('schemeContent').addEventListener('change', handleSchemeChange);
+  document.getElementById('treeContent').addEventListener('click', handleTreeClick);
+  document.getElementById('treeContent').addEventListener('change', handleTreeChange);
+  document.getElementById('treeContent').addEventListener('keydown', handleTreeKeydown);
+  document.getElementById('modalBody').addEventListener('click', handleModalBodyClick);
+
+  window.addEventListener('beforeunload', () => saveState(true));
+}
+function handleKeywordClick(event) {
+  const toggle = event.target.closest('[data-kw-toggle]');
+  if (toggle) {
+    const key = toggle.dataset.kwToggle;
+    if (ui.openKeywordGroups.has(key)) ui.openKeywordGroups.delete(key);
+    else ui.openKeywordGroups.add(key);
+    ui.editingKeyword = null;
+    renderKeywords();
+    return;
+  }
+  const add = event.target.closest('[data-kw-add]');
+  if (add) {
+    const key = add.dataset.kwAdd;
+    const input = document.querySelector(`[data-kw-add-input="${key}"]`);
+    if (addKeyword(key, input?.value)) {
+      if (input) input.value = '';
+      window.setTimeout(() => document.querySelector(`[data-kw-add-input="${key}"]`)?.focus(), 20);
+    }
+    return;
+  }
+  const edit = event.target.closest('[data-kw-edit]');
+  if (edit) {
+    const [key, idx] = edit.dataset.kwEdit.split(':');
+    startEditKeyword(key, Number(idx));
+    return;
+  }
+  const save = event.target.closest('[data-kw-save]');
+  if (save) {
+    const [key, idx] = save.dataset.kwSave.split(':');
+    saveEditKeyword(key, Number(idx));
+    return;
+  }
+  const cancel = event.target.closest('[data-kw-cancel]');
+  if (cancel) {
+    ui.editingKeyword = null;
+    renderKeywords();
+    return;
+  }
+  const del = event.target.closest('[data-kw-delete]');
+  if (del) {
+    const [key, idx] = del.dataset.kwDelete.split(':');
+    deleteKeyword(key, Number(idx));
+  }
+}
+
+function handleKeywordKeydown(event) {
+  if (event.key !== 'Enter') return;
+  const addInput = event.target.closest('[data-kw-add-input]');
+  if (addInput) {
+    event.preventDefault();
+    const key = addInput.dataset.kwAddInput;
+    if (addKeyword(key, addInput.value)) addInput.value = '';
+    return;
+  }
+  if (event.target.id === 'kwEditInput') {
+    event.preventDefault();
+    const save = document.querySelector('[data-kw-save]');
+    if (save) {
+      const [key, idx] = save.dataset.kwSave.split(':');
+      saveEditKeyword(key, Number(idx));
+    }
+  }
+}
+
+function handleSchemeClick(event) {
+  const tab = event.target.closest('[data-transform-tab]');
+  if (tab) {
+    ui.activeTransformTab = tab.dataset.transformTab;
+    renderSchemePanel();
+    return;
+  }
+  const typeTab = event.target.closest('[data-transform-type]');
+  if (typeTab) {
+    ui.activeTransformType = typeTab.dataset.transformType;
+    if (ui.activeTransformType !== 'combination') ui.comboMode = 'A';
+    renderSchemePanel();
+    return;
+  }
+  const comboMode = event.target.closest('[data-combo-mode]');
+  if (comboMode) {
+    ui.comboMode = comboMode.dataset.comboMode;
+    renderSchemePanel();
+    return;
+  }
+  const rec = event.target.closest('[data-rec-load]');
+  if (rec) {
+    const index = Number(rec.dataset.recLoad);
+    const item = state.caseRecommendations[index];
+    if (item) {
+      ui.activeTransformTab = 'manual';
+      ui.activeTransformType = item.type;
+      ui.comboMode = 'A';
+      ui.prefill = clone(item);
+      renderSchemePanel();
+      toast('推荐示例已载入手动面板，请补充或确认目的与理由后执行。', 'info', 3600);
+    }
+    return;
+  }
+  if (event.target.closest('#applyManualTransformBtn')) {
+    const active = activeScheme();
+    if (!active) return;
+    try {
+      const candidate = buildManualCandidate(active, ui.activeTransformType);
+      applyCandidate(candidate);
+    } catch (err) {
+      toast(err.message || '变换参数不完整。', 'error', 3800);
+    }
+    return;
+  }
+  const actionEl = event.target.closest('[data-action]');
+  if (actionEl) handleSchemeAction(actionEl.dataset.action);
+}
+
+function handleSchemeInput(event) {
+  const dimInput = event.target.closest('[data-edit-dim]');
+  if (dimInput) {
+    const key = dimInput.dataset.editDim;
+    if (!editBuffer) editBuffer = { ...(activeScheme()?.values || emptyValues()) };
+    editBuffer[key] = dimInput.value;
+    refreshSchemeDirtyUi();
+  }
+}
+
+function handleSchemeChange(event) {
+  const lock = event.target.closest('[data-lock]');
+  if (lock) {
+    state.locks[lock.dataset.lock] = lock.checked;
+    saveState();
+    renderAll();
+    return;
+  }
+  const semi = event.target.closest('[data-toggle-semi]');
+  if (semi) {
+    state.semiAutoEnabled = semi.checked;
+    saveState();
+    renderAll();
+    toast(state.semiAutoEnabled ? '半自动弹球变换已启用。' : '半自动弹球变换已关闭。', 'info');
+  }
+}
+function handleTreeClick(event) {
+  const remove = event.target.closest('[data-remove-compare]');
+  if (remove) {
+    removeCompare(remove.dataset.removeCompare);
+    return;
+  }
+  const locate = event.target.closest('[data-locate-scheme]');
+  if (locate) {
+    selectScheme(locate.dataset.locateScheme);
+    ui.activeTreeTab = 'tree';
+    renderTreePanel();
+    return;
+  }
+  const action = event.target.closest('[data-action]');
+  if (action) {
+    handleSchemeAction(action.dataset.action);
+    return;
+  }
+  const node = event.target.closest('[data-scheme-id]');
+  if (node && !event.target.closest('input,button,label')) {
+    selectScheme(node.dataset.schemeId);
+  }
+}
+
+function handleTreeChange(event) {
+  const compare = event.target.closest('[data-compare-id]');
+  if (compare) {
+    const id = compare.dataset.compareId;
+    if (compare.checked) {
+      if (state.selectedCompare.length >= 2) {
+        compare.checked = false;
+        toast('最多同时对比两个方案；请先取消一个已选节点。', 'warning');
+        return;
+      }
+      if (!state.selectedCompare.includes(id)) state.selectedCompare.push(id);
+    } else {
+      state.selectedCompare = state.selectedCompare.filter(x => x !== id);
+    }
+    saveState();
+    renderWorkflow();
+    renderTreePanel();
+  }
+}
+
+function handleTreeKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  const node = event.target.closest('[data-scheme-id]');
+  if (node && event.target === node) {
+    event.preventDefault();
+    selectScheme(node.dataset.schemeId);
+  }
+}
+
+function handleModalBodyClick(event) {
+  const caseBtn = event.target.closest('[data-case-load]');
+  if (caseBtn) requestCaseLoad(caseBtn.dataset.caseLoad);
+}
+
+function initApp() {
+  loadState();
+  if (state.activeId) {
+    const active = activeScheme();
+    if (active) editBuffer = { ...active.values };
+  }
+  if (!state.schemes.length) {
+    state.stage = 1;
+    state.activeId = null;
+    state.rootId = null;
+  }
+  ui.activeTreeTab = 'tree';
+  ui.activeTransformTab = state.schemes.length ? 'semi' : 'manual';
+  ui.openKeywordGroups = new Set(['theme', 'carrier', 'pattern', 'color', 'material']);
+  bindStaticEvents();
+  renderAll();
+  initCanvas();
+  const footer = document.getElementById('footerMeta');
+  if (footer) footer.textContent = `Local-first · Single HTML · v${APP_VERSION}`;
+  if (state.savedAt) {
+    const note = document.getElementById('saveStatus');
+    if (note) note.textContent = `已载入本地数据 · ${formatTimeShort(state.savedAt)}`;
+  } else {
+    saveState(true);
+  }
+  if (loadNotice) {
+    window.setTimeout(() => {
+      toast(loadNotice.text, loadNotice.type, 5200);
+      if (loadNotice.type === 'error') showMessageModal('本地数据读取异常', loadNotice.text, 'error');
+    }, 500);
+  }
+  // 研究演示用只读调试入口，便于答辩时检查状态对象；不参与界面逻辑。
+  window.__LZ_PROTOTYPE__ = {
+    getState: () => clone(state),
+    evaluateScheme,
+    loadCase,
+    exportFullReport,
+    getGeometry: () => clone(pentagon),
+    getBall: () => ({ x: ball.x, y: ball.y, vx: ball.vx, vy: ball.vy, running: ball.running, stats: { ...ball.stats } })
+  };
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp, { once: true });
+} else {
+  initApp();
+}
+</script>
+</body>
+</html>
